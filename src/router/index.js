@@ -9,6 +9,7 @@ import PostArticle from '@/components/PostArticle'
 import UserMana from '@/components/UserMana'
 import BlogDetail from '@/components/BlogDetail'
 import Register from '@/components/Register'
+import Reset from '@/components/Reset'
 Vue.use(Router)
 
 export default new Router({
@@ -17,6 +18,11 @@ export default new Router({
       path: '/register',
       name: '注册',
       component: Register
+    },
+    {
+      path: '/reset',
+      name: '重置',
+      component: Reset
     },
     {
       path: '/',

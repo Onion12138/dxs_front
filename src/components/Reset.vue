@@ -1,14 +1,10 @@
 <template>
   <el-form :model="registerForm" :rules="rules" ref="registerForm" class="login-container" label-position="left"
            label-width="20px" >
-    <h3 class="login_title">注册</h3>
+    <h3 class="login_title">重置密码</h3>
 
     <el-form-item prop="email">
       <el-input type="text" v-model="registerForm.email" auto-complete="off" placeholder="邮箱"></el-input>
-    </el-form-item>
-
-    <el-form-item prop="nickname">
-      <el-input type="text" v-model="registerForm.nickname" auto-complete="off" placeholder="昵称"></el-input>
     </el-form-item>
 
     <el-form-item prop="password">
@@ -20,21 +16,21 @@
     </el-form-item>
 
     <el-row>
-    <el-col :span="12">
-    <el-form-item prop="code">
-      <el-input type="text" v-model="registerForm.code" auto-complete="off" placeholder="验证码"></el-input>
-    </el-form-item>
-    </el-col>
+      <el-col :span="12">
+        <el-form-item prop="code">
+          <el-input type="text" v-model="registerForm.code" auto-complete="off" placeholder="验证码"></el-input>
+        </el-form-item>
+      </el-col>
 
-    <el-col :span="12">
-    <el-form-item style="width: 100%">
-      <el-button @click.native.prevent="sendCode('registerForm')" :disabled="this.timer != null">{{msg}}</el-button>
-    </el-form-item>
-    </el-col>
+      <el-col :span="12">
+        <el-form-item style="width: 100%">
+          <el-button @click.native.prevent="sendCode('registerForm')" :disabled="this.timer != null">{{msg}}</el-button>
+        </el-form-item>
+      </el-col>
     </el-row>
 
     <el-form-item style="width: 100%">
-      <el-button type="primary" @click="submitForm('registerForm')" style="width: 100%">注册</el-button>
+      <el-button type="primary" @click="submitForm('registerForm')" style="width: 100%">重置密码</el-button>
     </el-form-item>
 
 
@@ -69,7 +65,6 @@
       return {
         registerForm: {
           email: '',
-          nickname: '',
           password: '',
           checkPassword: '',
           code: '',
@@ -101,14 +96,15 @@
         this.$refs[formName].validate((valid) => {
           if (valid) {
             let _this = this;
-            postRequest('/user/register',{
-              email: this.registerForm.email,
-              nickname: this.registerForm.nickname,
-              password: this.registerForm.password
-            },{checkcode: this.registerForm.code}
+            postRequest('/user/forgetPassword',{},{
+                checkCode: this.registerForm.code,
+                email: this.registerForm.email,
+                password: this.registerForm.password
+              }
             ).then(resp => {
               if (resp.data.code === 0) {
-                _this.$alert('注册成功');
+                _this.$alert('密码重置成功');
+                _this.$router.replace({path: '/'});
               } else {
                 _this.$alert(resp.data.msg);
               }
@@ -116,7 +112,7 @@
               _this.$alert('服务器繁忙');
             });
           } else {
-            this.$alert('请正确填写注册信息');
+            this.$alert('请正确填写信息');
             return false;
           }
         });
