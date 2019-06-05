@@ -2,11 +2,13 @@
   <div v-loading="loading">
     <div style="margin-top: 10px;display: flex;justify-content: center">
       <el-input
-        placeholder="默认展示部分用户，可以通过用户名搜索用户..."
+        placeholder="根据邮箱搜索用户..."
         prefix-icon="el-icon-search"
         v-model="keywords" style="width: 400px" size="small">
       </el-input>
       <el-button type="primary" icon="el-icon-search" size="small" style="margin-left: 3px" @click="searchClick">搜索
+      </el-button>
+      <el-button type="primary" icon="el-icon-search" size="small" style="margin-left: 3px" @click="searchClassmates">搜索同学
       </el-button>
     </div>
     <div style="display: flex;justify-content: space-around;flex-wrap: wrap">
@@ -90,6 +92,9 @@
       });
     },
     methods: {
+      searchClassmates(){
+
+      },
       saveRoles(id, index){
         var selRoles = this.roles;
         if (this.cpRoles.length == selRoles.length) {

@@ -22,6 +22,7 @@
           default-active="0"
           class="el-menu-vertical-demo" style="background-color: #ECECEC" router>
           <template v-for="(item,index) in this.$router.options.routes" v-if="!item.hidden">
+<!--            <el-submenu :index="index+''" v-if="item.children.length>1" :key="index">-->
             <el-submenu :index="index+''" v-if="item.children.length>1" :key="index">
               <template slot="title">
                 <i :class="item.iconCls"></i>
@@ -83,11 +84,11 @@
         }
       });
       var _this = this;
-      getRequest("/").then(function (msg) {
+      /*getRequest("/").then(function (msg) {
         _this.currentUserName = msg.data;
       }, function (msg) {
         _this.currentUserName = '游客';
-      });
+      });*/
     },
     data(){
       return {

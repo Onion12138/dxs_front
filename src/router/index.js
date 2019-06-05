@@ -10,6 +10,7 @@ import UserMana from '@/components/UserMana'
 import BlogDetail from '@/components/BlogDetail'
 import Register from '@/components/Register'
 import Reset from '@/components/Reset'
+import InfoDetail from '@/components/InfoDetail'
 Vue.use(Router)
 
 export default new Router({
@@ -17,11 +18,19 @@ export default new Router({
     {
       path: '/register',
       name: '注册',
+      hidden: true,
       component: Register
+    },
+    {
+      path: '/info',
+      name: '信息',
+      hidden: true,
+      component: InfoDetail
     },
     {
       path: '/reset',
       name: '重置',
+      hidden: true,
       component: Reset
     },
     {
