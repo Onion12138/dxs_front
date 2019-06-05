@@ -4,12 +4,16 @@ import Login from '@/components/Login'
 import Home from '@/components/Home'
 import ArticleList from '@/components/ArticleList'
 import CateMana from '@/components/CateMana'
-import DataCharts from '@/components/DataCharts'
 import PostArticle from '@/components/PostArticle'
 import UserMana from '@/components/UserMana'
 import BlogDetail from '@/components/BlogDetail'
 import Register from '@/components/Register'
 import Reset from '@/components/Reset'
+import LineChart from '@/components/LineChart'
+import RingChart from '@/components/RingChart'
+import MultiChart from '@/components/MultiChart'
+import PieChart from '@/components/PieChart'
+
 Vue.use(Router)
 
 export default new Router({
@@ -17,12 +21,14 @@ export default new Router({
     {
       path: '/register',
       name: '注册',
-      component: Register
+      component: Register,
+      hidden: true
     },
     {
       path: '/reset',
       name: '重置',
-      component: Reset
+      component: Reset,
+      hidden: true
     },
     {
       path: '/',
@@ -103,10 +109,24 @@ export default new Router({
       iconCls: 'fa fa-bar-chart',
       children: [
         {
-          path: '/charts',
-          iconCls: 'fa fa-bar-chart',
-          name: '数据统计',
-          component: DataCharts
+          path: '/linechart',
+          name: '平均薪资',
+          component: LineChart
+        },
+        {
+          path: '/ringchart',
+          name: '工作城市',
+          component: RingChart
+        },
+        {
+          path: '/multichart',
+          name: '毕业选择',
+          component: MultiChart
+        },
+        {
+          path: '/piechart',
+          name: '工作公司',
+          component: PieChart
         }
       ]
     }
