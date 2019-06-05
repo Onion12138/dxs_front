@@ -88,7 +88,7 @@
           ],
           code: [
             {required: true, message: '请输入验证码', trigger: 'blur'},
-            {length: 6, message: '请输入6位验证码', trigger: 'blur'}
+            {pattern: /[0-9]{6}/, message: '请输入6位数字验证码', trigger: 'blur'}
           ]
         },
         msg: '发送验证码',
@@ -108,14 +108,13 @@
             },{checkcode: this.registerForm.code}
             ).then(resp => {
               if (resp.data.code === 0) {
-                _this.$alert('验证码已发送');
+                _this.$alert('注册成功');
               } else {
-                _this.$alert('验证码发送失败');
+                _this.$alert(resp.data.msg);
               }
             },resp=> {
               _this.$alert('服务器繁忙');
             });
-            this.$alert('您已成功注册');
           } else {
             this.$alert('请正确填写注册信息');
             return false;
@@ -123,9 +122,8 @@
         });
       },
       sendCode: function (formName) {
-        this.$refs[formName].validateField('email',(valid) =>{
-          window.alert(valid);
-          if(valid){
+        this.$refs[formName].validateField('email',msg =>{
+          if(msg === ""){
             this.count = 60;
             this.timer = setInterval(() => {
               if (this.count > 0) {
