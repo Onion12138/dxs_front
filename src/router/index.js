@@ -14,6 +14,7 @@ import RingChart from '@/components/RingChart'
 import MultiChart from '@/components/MultiChart'
 import PieChart from '@/components/PieChart'
 import InfoDetail from "../components/InfoDetail";
+import GraduateInfoDetail from "../components/GraduateInfoDetail";
 
 Vue.use(Router)
 
@@ -35,6 +36,12 @@ export default new Router({
       path: '/info',
       name: '信息',
       component: InfoDetail,
+      hidden: true
+    },
+    {
+      path: '/graduateInfo',
+      name: '毕业生信息',
+      component: GraduateInfoDetail,
       hidden: true
     },
     {
