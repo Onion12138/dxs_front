@@ -13,6 +13,7 @@ import LineChart from '@/components/LineChart'
 import RingChart from '@/components/RingChart'
 import MultiChart from '@/components/MultiChart'
 import PieChart from '@/components/PieChart'
+import InfoDetail from "../components/InfoDetail";
 
 Vue.use(Router)
 
@@ -28,6 +29,12 @@ export default new Router({
       path: '/reset',
       name: '重置',
       component: Reset,
+      hidden: true
+    },
+    {
+      path: '/info',
+      name: '信息',
+      component: InfoDetail,
       hidden: true
     },
     {

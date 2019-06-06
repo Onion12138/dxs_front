@@ -1,20 +1,46 @@
 <template>
   <div style="padding:20px;">
-    <el-select v-model="listQuery.provinceId" placeholder="省级地区" class="filter-item"
-               @change="queryCity" clearable>
+    <h3 class="login_title">信息认证</h3>
+    <el-row >
+    <el-select v-model="listQuery.provinceId" placeholder="省份" class="filter-item"
+               @change="queryCity" >
       <el-option v-for="(item,index) in provinceList" :key="item.id" :label="item.name" :value="item.id"/>
     </el-select>
-    <el-select v-model="listQuery.cityName" placeholder="市级地区" class="filter-item" @change="queryUniversity" clearable>
-    <el-option v-for="(item,index) in cityList" :key="item.id" :label="item.name" :value="item.id" />
-  </el-select>
-    <el-select v-model="listQuery.universityName" placeholder="大学" class="filter-item" @change="queryMajor" clearable>
-      <el-option v-for="(item,index) in universityList" :key="item.id" :label="item.universityName" :value="item.id" />
+    </el-row>
+
+    <el-row>
+    <el-select v-model="listQuery.cityName" placeholder="城市" class="filter-item" @change="queryUniversity" >
+    <el-option v-for="(item,index) in cityList" :key="item.id" :label="item.name" :value="item.name" />
     </el-select>
+    </el-row>
+
+      <el-row>
+    <el-select v-model="listQuery.universityName" placeholder="大学" class="filter-item" @change="queryMajor" >
+      <el-option v-for="(item,index) in universityList" :key="item.id" :label="item.universityName" :value="item.universityName" />
+    </el-select>
+      </el-row>
+
+      <el-row>
+    <el-select v-model="listQuery.majorName" placeholder="专业" class="filter-item" @change="" >
+      <el-option v-for="(item,index) in majorList" :key="item.id" :label="item.majorName" :value="item.majorName" />
+    </el-select>
+      </el-row>
+
+      <el-row>
+    <el-select v-model="listQuery.grade" placeholder="年级" class="filter-item" @change="" >
+      <el-option v-for="(item,index) in grade" :key="item.id" :label="item.level" :value="item.id" />
+    </el-select>
+      </el-row>
+
+      <el-row>
+    <el-button type="primary" @click.native.prevent="submit" >保存信息</el-button>
+      </el-row>
+
   </div>
 </template>
 
 <script>
-    import {getRequest} from "../utils/api";
+  import {getRequest, postRequest} from "../utils/api";
 
     export default {
         name: "InfoDetail",
@@ -55,11 +81,20 @@
             ],
             cityList: [],
             universityList: [],
+            majorList: [],
             listQuery: {
               provinceId: "",
               cityName: "",
-              universityName: ""
-            }
+              universityName: "",
+              majorName: "",
+              grade: "",
+            },
+            grade: [
+              {id: 1, level: "大一"},
+              {id: 2, level: "大二"},
+              {id: 3, level: "大三"},
+              {id: 4, level: "大四"}
+            ]
           }
         },
         methods: {
@@ -67,11 +102,9 @@
             getRequest("/city",{provinceId: this.listQuery.provinceId})
               .then(resp=> {
                 this.cityList = resp.data.data;
-                alert(this.cityList);
               },
               resp=> {
-                _this.loading = false;
-                _this.$alert('服务器繁忙');
+                this.$alert('服务器繁忙');
               });
           },
           queryUniversity(){
@@ -80,16 +113,44 @@
                 this.universityList = resp.data.data;
               },
               resp=>{
-
+                this.$alert('服务器繁忙');
               });
           },
           queryMajor(){
-
+            getRequest("/major",{universityName: this.listQuery.universityName})
+              .then(resp=>{
+                this.majorList = resp.data.data;
+              },
+              resp=>{
+                this.$alert('服务器繁忙');
+              });
+          },
+          submit(){
+            postRequest("/user/becomeStudent",
+              {universityName: this.listQuery.universityName,
+              majorName: this.listQuery.majorName,
+              grade: this.listQuery.grade},
+              {token: sessionStorage.getItem("token")})
+              .then(resp=>{
+                if(resp.data.code === 0){
+                  this.$alert("认证成功");
+                }else{
+                  this.$alert("认证失败");
+                }
+              },resp=>{
+                this.$alert('服务器繁忙');
+              });
           }
         }
     }
 </script>
 
 <style scoped>
+  .el-col {
+    border-radius: 4px;
+  }
+  .el-row {
+    margin-bottom: 20px;
+  }
 
 </style>

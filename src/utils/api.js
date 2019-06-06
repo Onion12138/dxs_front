@@ -26,20 +26,18 @@ export const uploadFileRequest = (url, params) => {
     }
   });
 }
-export const putRequest = (url, params) => {
+export const putRequest = (url, data, params) => {
   return axios({
     method: 'put',
     url: `${base}${url}`,
-    data: params,
+    data: data,
+    params: params,
     transformRequest: [function (data) {
-      let ret = ''
-      for (let it in data) {
-        ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
-      }
-      return ret
+      data = JSON.stringify(data);
+      return data;
     }],
     headers: {
-      'Content-Type': 'application/x-www-form-urlencoded'
+      'Content-Type': 'application/json'
     }
   });
 }

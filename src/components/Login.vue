@@ -58,7 +58,8 @@
               password: this.loginForm.password
             }).then(resp=> {
                 _this.loading = false;
-                sessionStorage.setItem("token",resp.data);
+                sessionStorage.setItem("nickname", resp.data.data.nickname);
+                sessionStorage.setItem("token",resp.data.data.token);
                 if(resp.data.code === 0){
                   _this.$router.replace({path: '/home'});
                 }else{
