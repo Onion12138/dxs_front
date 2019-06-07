@@ -13,6 +13,7 @@ Vue.filter("formatDate", function formatDate(value) {
   }
   return year + "-" + month + "-" + day;
 });
+*/
 Vue.filter("formatDateTime", function formatDateTime(value) {
   var date = new Date(value);
   var year = date.getFullYear();
@@ -27,7 +28,7 @@ Vue.filter("formatDateTime", function formatDateTime(value) {
     day = "0" + day;
   }
   return year + "-" + month + "-" + day + " " + hours + ":" + minutes;
-});*/
+});
 export  const formatDate = (dateTime) =>{
   let date = new Date(dateTime);
   let year = date.getFullYear();

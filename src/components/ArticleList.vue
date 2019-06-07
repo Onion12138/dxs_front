@@ -2,27 +2,40 @@
   <el-container class="article_list">
     <el-main class="main">
       <el-tabs v-model="activeName" @tab-click="handleClick" type="card">
-        <el-tab-pane label="全部文章" name="all">
+        <el-tab-pane label="最新发布" name="all">
           <blog_table state="-1" :showEdit="false" :showDelete="false" :activeName="activeName"></blog_table>
         </el-tab-pane>
-        <el-tab-pane label="已发表" name="post">
+        <el-tab-pane label="最新回复" name="post">
           <blog_table state="1" :showEdit="true" :showDelete="true" :activeName="activeName"></blog_table>
         </el-tab-pane>
-        <el-tab-pane label="草稿箱" name="draft">
+        <el-tab-pane label="最热" name="draft">
           <blog_table state="0" :showEdit="true" :showDelete="true" :activeName="activeName"></blog_table>
         </el-tab-pane>
-        <el-tab-pane label="回收站" name="dustbin">
+        <el-tab-pane label="精华" name="dustbin">
           <blog_table state="2" :showEdit="false" :showDelete="true" :activeName="activeName"></blog_table>
         </el-tab-pane>
-        <el-tab-pane label="博客管理" name="blogmana" v-if="isAdmin">
+        <el-tab-pane label="我关注的" name="blogmana">
           <blog_table state="-2" :showEdit="false" :showDelete="true" :activeName="activeName"></blog_table>
         </el-tab-pane>
-        <el-tab-pane label="博客配置" name="blogcfg">
-          <blog_cfg></blog_cfg>
-        </el-tab-pane>
+<!--        <el-tab-pane label="博客配置" name="blogcfg">-->
+<!--          <blog_cfg></blog_cfg>-->
+<!--        </el-tab-pane>-->
       </el-tabs>
     </el-main>
+
+
+    <el-footer>
+    <div class="block">
+      <el-pagination
+        layout="prev, pager, next"
+        :total="50">
+      </el-pagination>
+    </div>
+    </el-footer>
+
+
   </el-container>
+
 </template>
 <script>
   import BlogTable from '@/components/BlogTable'
@@ -34,9 +47,9 @@
   export default {
     mounted: function () {
       var _this = this;
-      getRequest("/isAdmin").then(resp=> {
-        if (resp.status == 200) {
-          _this.isAdmin = resp.data;
+      getRequest("/discussion/all",{majorName: "软件工程"}).then(resp=> {
+        if (resp.data.code ===0) {
+          _this.$alert("成功");
         }
       })
     },

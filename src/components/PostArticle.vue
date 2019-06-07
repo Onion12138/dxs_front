@@ -29,8 +29,7 @@
       <div style="display: flex;align-items: center;margin-top: 15px;justify-content: flex-end">
         <el-button @click="cancelEdit" v-if="from!=undefined">放弃修改</el-button>
         <template v-if="from==undefined || from=='draft'">
-          <el-button @click="saveBlog(0)">保存到草稿箱</el-button>
-          <el-button type="primary" @click="saveBlog()">发表文章</el-button>
+          <el-button type="primary" @click="saveBlog()">发表讨论</el-button>
         </template>
         <template v-else="from==post">
           <el-button type="primary" @click="updateBlog()">保存修改</el-button>
