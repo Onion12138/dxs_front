@@ -84,6 +84,7 @@
         }
       });
       var _this = this;
+      this.currentUserName = sessionStorage.getItem("nickname");
       /*getRequest("/").then(function (msg) {
         _this.currentUserName = msg.data;
       }, function (msg) {

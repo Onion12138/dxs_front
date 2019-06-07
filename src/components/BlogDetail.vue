@@ -7,28 +7,31 @@
     </el-col>
     <el-col :span="24">
       <div>
-        <div><h3 style="margin-top: 0px;margin-bottom: 0px">{{article.title}}</h3></div>
+        <div><h3 style="margin-top: 0px;margin-bottom: 0px">{{discussion.title}}</h3></div>
         <div style="width: 100%;margin-top: 5px;display: flex;justify-content: flex-end;align-items: center">
           <div style="display: inline; color: #20a0ff;margin-left: 50px;margin-right:20px;font-size: 12px;">
-            {{article.nickname}}
+            发表人:{{discussion.nickname}}
           </div>
-          <span style="color: #20a0ff;margin-right:20px;font-size: 12px;">浏览 {{article.pageView==null?0:article.pageView}}</span>
-          <span style="color: #20a0ff;margin-right:20px;font-size: 12px;"> {{article.editTime | formatDateTime}}</span>
-          <el-tag type="success" v-for="(item,index) in article.tags" :key="index" size="small"
-                  style="margin-left: 8px">{{item.tagName}}
-          </el-tag>
+          <div style="color: #20a0ff;margin-right:20px;font-size: 12px;">浏览次数 {{discussion.visits}}</div>
+          <div style="color: #20a0ff;margin-right:20px;font-size: 12px;">发表时间 {{publish}}</div>
+          <div style="color: #20a0ff;margin-right:20px;font-size: 12px;">修改时间 {{edit}}</div>
+<!--          <el-tag type="success" v-for="(item,index) in discussion.tags" :key="index" size="small"-->
+<!--                  style="margin-left: 8px">{{item.tagName}}-->
+<!--          </el-tag>-->
           <span style="margin:0px 50px 0px 0px"></span>
         </div>
       </div>
     </el-col>
     <el-col>
-      <div style="text-align: left" v-html="article.htmlContent">
+      <div style="text-align: left" v-html="discussion.htmlContent">
       </div>
     </el-col>
   </el-row>
+
 </template>
 <script>
   import {getRequest} from '../utils/api'
+  import {formatDate} from "../utils/filter_utils";
   export default{
     methods: {
       goBack(){
@@ -36,13 +39,16 @@
       }
     },
     mounted: function () {
-      var aid = this.$route.query.aid;
-      this.activeName = this.$route.query.an
+      let discussionId = this.$route.query.id;
+      //this.activeName = this.$route.query.an
       var _this = this;
       this.loading = true;
-      getRequest("/article/" + aid).then(resp=> {
+      getRequest("/discussion",{id: discussionId}).then(resp=> {
         if (resp.status == 200) {
-          _this.article = resp.data;
+          _this.discussion = resp.data.data;
+        }
+        else{
+          _this.$alert("找不到文章");
         }
         _this.loading = false;
       }, resp=> {
@@ -52,9 +58,30 @@
     },
     data(){
       return {
-        article: {},
+        discussion: {
+          id: "",
+          title: "",
+          mdContent: "",
+          htmlContent: "",
+          majorName: "",
+          publishTime: "",
+          lastEditTime: "",
+          email: "",
+          nickname: "",
+          visits: "",
+          comments: "",
+          thumbs: "",
+        },
         loading: false,
         activeName: ''
+      }
+    },
+    computed:{
+      publish: function () {
+          return formatDate(this.discussion.publishTime);
+      },
+      edit: function () {
+          return formatDate(this.discussion.lastEditTime);
       }
     }
   }

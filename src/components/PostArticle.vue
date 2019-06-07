@@ -1,14 +1,6 @@
 <template>
   <el-container v-loading="loading" class="post-article">
     <el-header class="header">
-      <el-select v-model="article.cid" placeholder="请选择文章栏目" style="width: 150px;">
-        <el-option
-          v-for="item in categories"
-          :key="item.id"
-          :label="item.cateName"
-          :value="item.id">
-        </el-option>
-      </el-select>
       <el-input v-model="article.title" placeholder="请输入标题..." style="width: 400px;margin-left: 10px"></el-input>
       <el-tag
         :key="tag"
@@ -38,10 +30,10 @@
         <el-button @click="cancelEdit" v-if="from!=undefined">放弃修改</el-button>
         <template v-if="from==undefined || from=='draft'">
           <el-button @click="saveBlog(0)">保存到草稿箱</el-button>
-          <el-button type="primary" @click="saveBlog(1)">发表文章</el-button>
+          <el-button type="primary" @click="saveBlog()">发表文章</el-button>
         </template>
         <template v-else="from==post">
-          <el-button type="primary" @click="saveBlog(1)">保存修改</el-button>
+          <el-button type="primary" @click="updateBlog()">保存修改</el-button>
         </template>
       </div>
     </el-main>
@@ -66,15 +58,15 @@
       this.from = from;
       var _this = this;
       if (from != null && from != '' && from != undefined) {
-        var id = this.$route.query.id;
-        this.id = id;
+        this.article.id = this.$route.query.id;
         this.loading = true;
-        getRequest("/article/" + id).then(resp=> {
+        getRequest("/discussion",{id: this.article.id}).then(resp=> {
           _this.loading = false;
           if (resp.status == 200) {
-            _this.article = resp.data;
+            _this.article = resp.data.data;
             var tags = resp.data.tags;
-            _this.article.dynamicTags = []
+            _this.article.dynamicTags = [];
+            //_this.article.mdContent = _this.article.mdContent;
             for (var i = 0; i < tags.length; i++) {
               _this.article.dynamicTags.push(tags[i].tagName)
             }
@@ -94,56 +86,66 @@
       cancelEdit(){
         this.$router.go(-1)
       },
-      saveBlog(state){
-        if (!(isNotNullORBlank(this.article.title, this.article.mdContent, this.article.cid))) {
+      updateBlog(){
+        if (!(isNotNullORBlank(this.article.title, this.article.mdContent))) {
           this.$message({type: 'error', message: '数据不能为空!'});
           return;
         }
-        var _this = this;
+        let _this = this;
         _this.loading = true;
-        postRequest("/article/", {
+        putRequest("/discussion",{
           id: _this.article.id,
           title: _this.article.title,
           mdContent: _this.article.mdContent,
           htmlContent: _this.$refs.md.d_render,
-          cid: _this.article.cid,
-          state: state,
-          dynamicTags: _this.article.dynamicTags
-        }).then(resp=> {
+        },{token: sessionStorage.getItem("token")})
+          .then(resp=>{
+            _this.loading = false;
+            if(resp.data.code === 0){
+              _this.$alert("修改成功");
+            }else{
+              _this.$alert("修改失败");
+            }
+          },resp=>{
+            _this.$alert("服务器繁忙");
+          })
+      },
+      saveBlog(state){
+        if (!(isNotNullORBlank(this.article.title, this.article.mdContent))) {
+          this.$message({type: 'error', message: '数据不能为空!'});
+          return;
+        }
+        let _this = this;
+        _this.loading = true;
+        postRequest("/discussion", {
+          title: _this.article.title,
+          mdContent: _this.article.mdContent,
+          majorName: "软件工程",
+          htmlContent: _this.$refs.md.d_render,
+          // cid: _this.article.cid,
+          // dynamicTags: _this.article.dynamicTags
+        },{token: sessionStorage.getItem("token")})
+          .then(resp=> {
           _this.loading = false;
           if (resp.status == 200 && resp.data.status == 'success') {
-            _this.article.id = resp.data.msg;
-            _this.$message({type: 'success', message: state == 0 ? '保存成功!' : '发布成功!'});
-//            if (_this.from != undefined) {
-            window.bus.$emit('blogTableReload')
-//            }
-            if (state == 1) {
-              _this.$router.replace({path: '/articleList'});
-            }
+//             _this.article.id = resp.data.msg;
+//             _this.$message({type: 'success', message: state == 0 ? '保存成功!' : '发布成功!'});
+// //            if (_this.from != undefined) {
+//             window.bus.$emit('blogTableReload')
+// //            }
+//             if (state == 1) {
+//               _this.$router.replace({path: '/articleList'});
+//             }
+            _this.$alert("发表成功");
+          }else{
+            _this.alert("未知错误");
           }
         }, resp=> {
           _this.loading = false;
           _this.$message({type: 'error', message: state == 0 ? '保存草稿失败!' : '博客发布失败!'});
         })
       },
-      imgAdd(pos, $file){
-        var _this = this;
-        // 第一步.将图片上传到服务器.
-        var formdata = new FormData();
-        formdata.append('image', $file);
-        uploadFileRequest("/article/uploadimg", formdata).then(resp=> {
-          var json = resp.data;
-          if (json.status == 'success') {
-//            _this.$refs.md.$imgUpdateByUrl(pos, json.msg)
-            _this.$refs.md.$imglst2Url([[pos, json.msg]])
-          } else {
-            _this.$message({type: json.status, message: json.msg});
-          }
-        });
-      },
-      imgDel(pos){
 
-      },
       getCategories(){
         let _this = this;
         getRequest("/admin/category/all").then(resp=> {
@@ -176,11 +178,12 @@
         loading: false,
         from: '',
         article: {
-          id: '-1',
+          id: '',
           dynamicTags: [],
           title: '',
           mdContent: '',
-          cid: ''
+          htmlContent: "",
+          cid: '',
         }
       }
     }
