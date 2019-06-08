@@ -24,13 +24,10 @@
       ref="multipleTable"
       :data="discussions"
       tooltip-effect="dark"
+      :stripe="true"
       style="width: 100%;overflow-x: hidden; overflow-y: hidden;"
       max-height="390"
       @selection-change="handleSelectionChange" v-loading="loading">
-      <el-table-column
-        type="selection"
-        width="35" align="left" v-if="showEdit || showDelete">
-      </el-table-column>
       <el-table-column
         label="标题" prop="title"
         width="200" align="left">
@@ -86,18 +83,19 @@
 <!--                 :disabled="this.selItems.length==0" @click="deleteMany">批量删除-->
 <!--      </el-button>-->
 <!--      <span></span>-->
-<!--      <el-pagination-->
-<!--        background-->
-<!--        :page-size="pageSize"-->
-<!--        layout="prev, pager, next"-->
-<!--        :total="totalCount" @current-change="currentChange" v-show="this.articles.length>0">-->
-<!--      </el-pagination>-->
+      <el-pagination
+        background
+        :page-size="pageSize"
+        :page-count="totalPages"
+        :pager-count="7"
+        layout="prev, pager, next, jumper"
+        @current-change="handleCurrentChange" v-show="true">
+      </el-pagination>
 <!--    </div>-->
   </div>
 </template>
-
 <script>
-  import {putRequest} from '../utils/api'
+  import {deleteRequest, putRequest} from '../utils/api'
   import {getRequest} from '../utils/api'
   import Vue from 'vue'
 //  var bus = new Vue()
@@ -108,23 +106,29 @@
         discussions: [],
         selItems: [],
         loading: false,
-        pageNumber: 0,
+        pageNumber: 1,
+        pageSize: 5,
         totalPages: -1,
-        pageSize: 6,
+        totalElements: 0,
         keywords: '',
         dustbinData: [],
         email: "",
       }
     },
     mounted: function () {
-      var _this = this;
+      let _this = this; //修改
       this.loading = true;
       this.email = sessionStorage.getItem('email');
       this.loadBlogs(1, this.pageSize);
-      // window.bus.$on('blogTableReload', function () {
-      //   _this.loading = true;
-      //   _this.loadBlogs(_this.pageNumber, _this.pageSize);
-      // })
+      window.bus.$on('blogTableReload', function () {
+         _this.loading = true;
+         _this.loadBlogs(_this.pageNumber, _this.pageSize);
+       })
+    },
+    watch: {
+        activeName: function () {
+          this.loadBlogs(this.pageNumber,this.pageSize);
+        }
     },
     methods: {
       searchClick(){
@@ -133,31 +137,24 @@
       itemClick(row){
         this.$router.push({path: '/blogDetail', query: {id: row.id}})
       },
-      deleteMany(){
-        var selItems = this.selItems;
-        for (var i = 0; i < selItems.length; i++) {
-          this.dustbinData.push(selItems[i].id)
-        }
-        this.deleteToDustBin(selItems[0].state)
-      },
-      //翻页
-      currentChange(currentPage){
-        this.currentPage = currentPage;
+      handleCurrentChange(currentPage){
+        this.pageNumber = currentPage;
         this.loading = true;
         this.loadBlogs(currentPage, this.pageSize);
       },
-      loadBlogs(page, count){
-        var _this = this;
-        // if (this.state == -2) {
-        //   url = "/admin/article/all" + "?page=" + page + "&count=" + count + "&keywords=" + this.keywords;
-        // } else {
-        //   url = "/article/all?state=" + this.state + "&page=" + page + "&count=" + count + "&keywords=" + this.keywords;
-        // }
-        getRequest("/discussion/all",{majorName: "软件工程"}).then(resp=> {
+      loadBlogs(page, size){
+        let _this = this;
+        getRequest("/discussion/all",
+          {majorName: sessionStorage.getItem('majorName'),
+            property: _this.activeName,
+            page: page,
+            size: size,
+          }).then(resp=> {
           _this.loading = false;
           if (resp.data.code === 0) {
             _this.discussions = resp.data.data.content;
             _this.totalPages = resp.data.data.totalPages;
+            _this.totalElements = resp.data.data.totalElements;
           } else {
             _this.$message({type: 'error', message: '查询出错!'});
           }
@@ -177,48 +174,20 @@
         this.$router.push({path: '/editBlog', query: {from: this.activeName,id:row.id}});
       },
       handleDelete(index, row) {
-        this.dustbinData.push(row.id);
-        this.deleteToDustBin(row.state);
+        // this.dustbinData.push(row.id);
+        // this.deleteToDustBin(row.state);
+        let _this = this;
+        deleteRequest('/discussion',{id:row.id})
+          .then(resp=>{
+            if(resp.data.code === 0){
+              _this.$alert("删除成功");
+              window.bus.$emit('blogTableReload');
+            }else{
+              _this.$alert('删除失败');
+            }},resp=>{
+              _this.$alert('服务器繁忙');
+          });
       },
-      deleteToDustBin(state){
-        var _this = this;
-        this.$confirm(state != 2 ? '将该文件放入回收站，是否继续?' : '永久删除该文件, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          _this.loading = true;
-          var url = '';
-          if (_this.state == -2) {
-            url = "/admin/article/dustbin";
-          } else {
-            url = "/article/dustbin";
-          }
-          putRequest(url, {aids: _this.dustbinData, state: state}).then(resp=> {
-            if (resp.status == 200) {
-              var data = resp.data;
-              _this.$message({type: data.status, message: data.msg});
-              if (data.status == 'success') {
-                window.bus.$emit('blogTableReload')//通过选项卡都重新加载数据
-              }
-            } else {
-              _this.$message({type: 'error', message: '删除失败!'});
-            }
-            _this.loading = false;
-            _this.dustbinData = []
-          }, resp=> {
-            _this.loading = false;
-            _this.$message({type: 'error', message: '删除失败!'});
-            _this.dustbinData = []
-          });
-        }).catch(() => {
-          _this.$message({
-            type: 'info',
-            message: '已取消删除'
-          });
-          _this.dustbinData = []
-        });
-      }
     },
      props: ['state', 'showEdit', 'showDelete', 'activeName']
   }

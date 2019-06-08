@@ -41,10 +41,11 @@ export const putRequest = (url, data, params) => {
     }
   });
 }
-export const deleteRequest = (url) => {
+export const deleteRequest = (url,params) => {
   return axios({
     method: 'delete',
-    url: `${base}${url}`
+    url: `${base}${url}`,
+    params: params,
   });
 }
 export const getRequest = (url,params) => {

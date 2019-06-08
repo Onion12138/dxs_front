@@ -102,6 +102,8 @@
             _this.loading = false;
             if(resp.data.code === 0){
               _this.$alert("修改成功");
+              window.bus.$emit('blogTableReload');
+              _this.$router.push({path: '/articleList'})
             }else{
               _this.$alert("修改失败");
             }
@@ -119,25 +121,17 @@
         postRequest("/discussion", {
           title: _this.article.title,
           mdContent: _this.article.mdContent,
-          majorName: "软件工程",
+          majorName: sessionStorage.getItem("majorName"),
           htmlContent: _this.$refs.md.d_render,
-          // cid: _this.article.cid,
-          // dynamicTags: _this.article.dynamicTags
         },{token: sessionStorage.getItem("token")})
           .then(resp=> {
           _this.loading = false;
-          if (resp.status == 200 && resp.data.status == 'success') {
-//             _this.article.id = resp.data.msg;
-//             _this.$message({type: 'success', message: state == 0 ? '保存成功!' : '发布成功!'});
-// //            if (_this.from != undefined) {
-//             window.bus.$emit('blogTableReload')
-// //            }
-//             if (state == 1) {
-//               _this.$router.replace({path: '/articleList'});
-//             }
+          if (resp.data.code === 0 ) {
+            window.bus.$emit('blogTableReload');
             _this.$alert("发表成功");
+            _this.$router.replace({path: '/articleList'});
           }else{
-            _this.alert("未知错误");
+            _this.$alert("未知错误");
           }
         }, resp=> {
           _this.loading = false;
