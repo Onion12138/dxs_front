@@ -13,18 +13,14 @@ import LineChart from '@/components/LineChart'
 import RingChart from '@/components/RingChart'
 import MultiChart from '@/components/MultiChart'
 import PieChart from '@/components/PieChart'
+import PersonalInfo from '@/components/PersonalInfo'
 import InfoDetail from "../components/InfoDetail";
 import GraduateInfoDetail from "../components/GraduateInfoDetail";
-import Test from "@/components/Test"
+// import Test from "@/components/Test"
 Vue.use(Router)
 
 export default new Router({
   routes: [
-    {
-      path: '/test',
-      component: Test,
-      hidden: true
-    },
     {
       path: '/register',
       name: '注册',
@@ -41,6 +37,13 @@ export default new Router({
       path: '/info',
       name: '信息',
       component: InfoDetail,
+      hidden: true
+    },
+    //add
+    {
+      path: '/personalInfo',
+      name: '个人主页',
+      component: PersonalInfo,
       hidden: true
     },
     {
