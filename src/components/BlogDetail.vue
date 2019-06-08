@@ -53,12 +53,14 @@
         ref="multipleTable"
         :data="comments"
         tooltip-effect="dark"
-        stripe="true"
+        :stripe="true"
+        row-key="commentId"
+        :tree-props="{children:'children'}"
         style="width: 100%;overflow-x: hidden; overflow-y: hidden;"
         max-height="390"
         @selection-change="handleSelectionChange" v-loading="loading">
         <el-table-column
-          label="内容" prop="content"
+          label="内容" prop="comment.content"
           width="600" align="left">
           <template slot-scope="scope"><span style="color: #409eff;cursor: pointer" @click="itemClick(scope.row)">{{ scope.row.content}}</span>
           </template>
@@ -174,6 +176,8 @@
       getRequest("/discussion/comment",{id: discussionId}).then(resp=> {
         if (resp.data.code === 0) {
           _this.comments = resp.data.data.list;
+          _this.$alert(_this.comments);
+
         }
         else{
           _this.$alert("找不到评论");
