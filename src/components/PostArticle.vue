@@ -61,7 +61,7 @@
         this.loading = true;
         getRequest("/discussion",{id: this.article.id}).then(resp=> {
           _this.loading = false;
-          if (resp.status == 200) {
+          if (resp.status === 200) {
             _this.article = resp.data.data;
             var tags = resp.data.tags;
             _this.article.dynamicTags = [];
@@ -138,7 +138,6 @@
           _this.$message({type: 'error', message: state == 0 ? '保存草稿失败!' : '博客发布失败!'});
         })
       },
-
       getCategories(){
         let _this = this;
         getRequest("/admin/category/all").then(resp=> {

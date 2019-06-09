@@ -60,10 +60,10 @@
         max-height="390"
         @selection-change="handleSelectionChange" v-loading="loading">
         <el-table-column
-          label="内容" prop="comment.content"
+          label="内容" prop="content"
           width="600" align="left">
-          <template slot-scope="scope"><span style="color: #409eff;cursor: pointer" @click="itemClick(scope.row)">{{ scope.row.content}}</span>
-          </template>
+<!--          <template slot-scope="scope"><span style="color: #409eff;cursor: pointer" @click="itemClick(scope.row)">{{ scope.row.content}}</span>-->
+<!--          </template>-->
         </el-table-column>
         <el-table-column
           label="发布时间" prop="lastEditTime"
@@ -80,16 +80,49 @@
           <template slot-scope="scope">
             <el-button
               size="mini"
-              @click="handleEdit(scope.$index, scope.row)" v-if="scope.row.email === user">编辑
+              @click="handleEditComment(scope.$index, scope.row.content)" v-if="scope.row.email === user && edit">编辑
+            </el-button>
+            <el-button
+              size="mini"
+              type="danger"
+              @click="handleDeleteComment(scope.row.commentId)" v-if="scope.row.email === user">删除
+            </el-button>
+            <el-button
+              size="mini"
+              @click="handleSave(scope.row.commentId,scope.row.email)" v-if="!edit">保存
+            </el-button>
+            <el-button
+              size="mini"
+              @click="handleGiveUp" v-if="!edit">放弃修改
             </el-button>
             <el-button
               size="mini"
               type="primary"
-              @click="handleDelete(scope.$index, scope.row)" v-if="scope.row.email !== user">回复
+              @click="handleCommentBelow(scope.$index, scope.row)" v-if="scope.row.email !== user && edit">回复
             </el-button>
+<!--            <el-button-->
+<!--              size="mini"-->
+<!--              type="primary"-->
+<!--              @click="handleCommentBelow(scope.$index, scope.row)" v-if="scope.row.email !== user && !editReply">保存-->
+<!--            </el-button>-->
+<!--            <el-button-->
+<!--              size="mini"-->
+<!--              type="primary"-->
+<!--              @click="handleCommentBelow(scope.$index, scope.row)" v-if="scope.row.email !== user && !editReply">放弃修改-->
+<!--            </el-button>-->
           </template>
         </el-table-column>
       </el-table>
+    </el-col>
+
+    <el-col>
+      <el-input
+        type="textarea"
+        :rows="2"
+        placeholder="请输入内容"
+        v-model="contentBelow"
+        v-if="replyBelow">
+      </el-input>
     </el-col>
   </el-row>
 
@@ -107,6 +140,81 @@
       },
       handleEdit: function () {
         this.$router.push({path: '/editBlog', query: {from: "detail",id:this.discussion.id}});
+        window.bus.$emit('detailReload');
+      },
+      handleDeleteComment: function(commentId){
+        let _this = this;
+        deleteRequest('/discussion/comment',{commentId: commentId})
+          .then(resp => {
+            if (resp.data.code === 0) {
+              _this.$alert("删除成功");
+              // window.bus.$emit('blogTableReload');
+            } else {
+              _this.$alert("删除失败");
+            }
+          }, resp => {
+            _this.$alert('服务器繁忙');
+          });
+        window.bus.$emit('detailReload');
+      },
+      handleEditComment: function(index, content){
+        this.contentBelow = content;
+        this.replyBelow = true;
+        this.edit = false;
+      },
+      handleGiveUp: function(){
+        this.edit = true;
+        this.replyBelow = false;
+      },
+      handleCommentBelow: function(){
+        this.replyBelow = true;
+        this.edit = false;
+      },
+      handleSave: function (commentId,author){
+        let _this = this;
+        alert(author);
+        if(this.contentBelow !== "") {
+          if(author !== _this.user){
+            postRequest('/discussion/comment',{
+              discussionId: _this.discussion.id,
+              email: sessionStorage.getItem('email'),
+              content: _this.contentBelow,
+              parentId: commentId,
+            }).then(resp => {
+              if (resp.data.code === 0) {
+                _this.$alert("回复成功");
+                window.bus.$emit('blogTableReload');
+              } else {
+                _this.$alert("回复失败");
+              }
+              _this.replyBelow = false;
+              _this.edit = true;
+            }, resp => {
+              _this.$alert('服务器繁忙');
+            });
+          }else{
+          putRequest('/discussion/comment', {
+            discussionId: _this.discussion.id,
+            commentId: commentId,
+            email: sessionStorage.getItem("email"),
+            content: _this.contentBelow,
+          }).then(resp => {
+            if (resp.data.code === 0) {
+              _this.$alert("评论成功");
+              window.bus.$emit('blogTableReload');
+            } else {
+              _this.$alert("评论失败");
+            }
+            _this.replyBelow = false;
+            _this.edit = true;
+          }, resp => {
+            _this.$alert('服务器繁忙');
+          });
+        }}
+        else{
+          _this.$alert("评论不能为空");
+        }
+        window.bus.$emit('detailReload');
       },
       handleDelete: function () {
         let _this = this;
@@ -121,11 +229,13 @@
             _this.$alert('服务器繁忙');
           });
         _this.$router.push({path: '/articleList'});
+        window.bus.$emit('detailReload');
       },
       handleStar: function () {
         this.star = true;
         putRequest('/discussion/thumb',{},{id:this.discussion.id});
         window.bus.$emit('blogTableReload');
+        window.bus.$emit('detailReload');
       },
       handleComment: function () {
         this.content = "";
@@ -153,39 +263,47 @@
         else{
           _this.$alert("评论不能为空");
         }
+        window.bus.$emit('detailReload');
+      },
+      loadDetails: function () {
+        let discussionId = this.$route.query.id;
+        let _this = this;
+        getRequest("/discussion",{id: discussionId}).then(resp=> {
+          if (resp.data.code === 0) {
+            _this.discussion = resp.data.data;
+          }
+          else{
+            _this.$alert("找不到文章");
+          }
+          _this.loading = false;
+        }, resp=> {
+          _this.loading = false;
+          _this.$message({type: 'error', message: '页面加载失败!'});
+        });
+        getRequest("/discussion/comment",{id: discussionId}).then(resp=> {
+          if (resp.data.code === 0) {
+            _this.comments = resp.data.data.list;
+            _this.$alert(_this.comments);
+          }
+          else{
+            _this.$alert("找不到评论");
+          }
+          _this.loading = false;
+        }, resp=> {
+          _this.loading = false;
+          _this.$message({type: 'error', message: '页面加载失败!'});
+        });
       }
     },
     mounted: function () {
-      let discussionId = this.$route.query.id;
       //this.activeName = this.$route.query.an
-      var _this = this;
+      let _this = this;
       this.loading = true;
       this.user = sessionStorage.getItem("email");
-      getRequest("/discussion",{id: discussionId}).then(resp=> {
-        if (resp.data.code === 0) {
-          _this.discussion = resp.data.data;
-        }
-        else{
-          _this.$alert("找不到文章");
-        }
-        _this.loading = false;
-      }, resp=> {
-        _this.loading = false;
-        _this.$message({type: 'error', message: '页面加载失败!'});
-      });
-      getRequest("/discussion/comment",{id: discussionId}).then(resp=> {
-        if (resp.data.code === 0) {
-          _this.comments = resp.data.data.list;
-          _this.$alert(_this.comments);
-
-        }
-        else{
-          _this.$alert("找不到评论");
-        }
-        _this.loading = false;
-      }, resp=> {
-        _this.loading = false;
-        _this.$message({type: 'error', message: '页面加载失败!'});
+      this.loadDetails();
+      window.bus.$on('detailReload', function () {
+        _this.loading = true;
+        this.loadDetails();
       });
     },
     data(){
@@ -211,15 +329,16 @@
         star: false,
         reply: false,
         content: "",
+        contentBelow: "",
+        replyBelow: false,
+        edit: true,
+        editReply: true,
       }
     },
     computed:{
       publish: function () {
           return formatDate(this.discussion.publishTime);
       },
-      edit: function () {
-          return formatDate(this.discussion.lastEditTime);
-      }
     },
   }
 </script>

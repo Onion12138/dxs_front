@@ -16,11 +16,17 @@ import PieChart from '@/components/PieChart'
 import PersonalInfo from '@/components/PersonalInfo'
 import InfoDetail from "../components/InfoDetail";
 import GraduateInfoDetail from "../components/GraduateInfoDetail";
-// import Test from "@/components/Test"
+import Test from "@/components/Test"
 Vue.use(Router)
 
 export default new Router({
   routes: [
+    {
+      path: '/test',
+      component: Test,
+      hidden: true
+
+    },
     {
       path: '/register',
       name: '注册',
