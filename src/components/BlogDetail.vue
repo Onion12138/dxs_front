@@ -1,5 +1,5 @@
 <template>
-  <el-row v-loading="loading">
+  <el-row >
     <el-col :span="24">
       <div style="text-align: left;">
         <el-button type="text" icon="el-icon-back" @click="goBack" style="padding-bottom: 0px;">返回</el-button>
@@ -18,7 +18,7 @@
           <i class="el-icon-view"> {{discussion.visits}} </i>
 <!--          <div style="color: #20a0ff;margin-right:20px;font-size: 12px;">发表时间 {{publish}}</div>-->
           <i class="el-icon-timer"> {{publish}}</i>
-          <i class="el-icon-edit">{{edit}}</i>
+          <i class="el-icon-edit">{{editTime}}</i>
 <!--          <div style="color: #20a0ff;margin-right:20px;font-size: 12px;">修改时间 {{edit}}</div>-->
 <!--          <el-tag type="success" v-for="(item,index) in discussion.tags" :key="index" size="small"-->
 <!--                  style="margin-left: 8px">{{item.tagName}}-->
@@ -58,7 +58,7 @@
         :tree-props="{children:'children'}"
         style="width: 100%;overflow-x: hidden; overflow-y: hidden;"
         max-height="390"
-        @selection-change="handleSelectionChange" v-loading="loading">
+        @selection-change="handleSelectionChange" >
         <el-table-column
           label="内容" prop="content"
           width="600" align="left">
@@ -79,26 +79,26 @@
         <el-table-column label="操作" align="left" >
           <template slot-scope="scope">
             <el-button
-              size="mini"
-              @click="handleEditComment(scope.$index, scope.row.content)" v-if="scope.row.email === user && edit">编辑
+              size="mini" type="primary" icon="el-icon-edit"
+              @click="handleEditComment(scope.row.commentId,scope.row.content)" v-if="scope.row.email === user && edit">编辑
             </el-button>
             <el-button
               size="mini"
-              type="danger"
-              @click="handleDeleteComment(scope.row.commentId)" v-if="scope.row.email === user">删除
+              type="danger" icon="el-icon-delete"
+              @click="handleDeleteComment(scope.row.commentId)" v-if="scope.row.email === user && edit">删除
+            </el-button>
+            <el-button
+              size="mini" type="primary" icon="el-icon-document-checked"
+              @click="handleSave(scope.row.commentId,scope.row.email)" v-if="!edit && currentCommentId === scope.row.commentId">保存
+            </el-button>
+            <el-button
+              size="mini" type="warning" icon="el-icon-s-release"
+              @click="handleGiveUp" v-if="!edit && currentCommentId === scope.row.commentId">放弃修改
             </el-button>
             <el-button
               size="mini"
-              @click="handleSave(scope.row.commentId,scope.row.email)" v-if="!edit">保存
-            </el-button>
-            <el-button
-              size="mini"
-              @click="handleGiveUp" v-if="!edit">放弃修改
-            </el-button>
-            <el-button
-              size="mini"
-              type="primary"
-              @click="handleCommentBelow(scope.$index, scope.row)" v-if="scope.row.email !== user && edit">回复
+              type="primary" icon="el-icon-edit-outline"
+              @click="handleCommentBelow(scope.row.commentId)" v-if="scope.row.email !== user && edit">回复
             </el-button>
 <!--            <el-button-->
 <!--              size="mini"-->
@@ -157,22 +157,23 @@
           });
         window.bus.$emit('detailReload');
       },
-      handleEditComment: function(index, content){
+      handleEditComment: function(commentId, content){
         this.contentBelow = content;
         this.replyBelow = true;
         this.edit = false;
+        this.currentCommentId = commentId;
       },
       handleGiveUp: function(){
         this.edit = true;
         this.replyBelow = false;
       },
-      handleCommentBelow: function(){
+      handleCommentBelow: function(commentId){
         this.replyBelow = true;
         this.edit = false;
+        this.currentCommentId = commentId;
       },
       handleSave: function (commentId,author){
         let _this = this;
-        alert(author);
         if(this.contentBelow !== "") {
           if(author !== _this.user){
             postRequest('/discussion/comment',{
@@ -183,12 +184,13 @@
             }).then(resp => {
               if (resp.data.code === 0) {
                 _this.$alert("回复成功");
-                window.bus.$emit('blogTableReload');
+                window.bus.$emit('detailReload');
               } else {
                 _this.$alert("回复失败");
               }
               _this.replyBelow = false;
               _this.edit = true;
+              _this.contentBelow = "";
             }, resp => {
               _this.$alert('服务器繁忙');
             });
@@ -201,7 +203,7 @@
           }).then(resp => {
             if (resp.data.code === 0) {
               _this.$alert("评论成功");
-              window.bus.$emit('blogTableReload');
+              window.bus.$emit('detailReload');
             } else {
               _this.$alert("评论失败");
             }
@@ -214,7 +216,7 @@
         else{
           _this.$alert("评论不能为空");
         }
-        window.bus.$emit('detailReload');
+
       },
       handleDelete: function () {
         let _this = this;
@@ -222,14 +224,14 @@
           .then(resp=>{
             if(resp.data.code === 0){
               _this.$alert("删除成功");
-              window.bus.$emit('blogTableReload');
+              window.bus.$emit('detailReload');
             }else{
               _this.$alert('删除失败');
             }},resp=>{
             _this.$alert('服务器繁忙');
           });
         _this.$router.push({path: '/articleList'});
-        window.bus.$emit('detailReload');
+
       },
       handleStar: function () {
         this.star = true;
@@ -251,7 +253,8 @@
           }).then(resp => {
             if (resp.data.code === 0) {
               _this.$alert("评论成功");
-              window.bus.$emit('blogTableReload');
+              window.bus.$emit('detailReload');
+              // window.bus.$emit('blogTableReload');
             } else {
               _this.$alert("评论失败");
             }
@@ -263,7 +266,7 @@
         else{
           _this.$alert("评论不能为空");
         }
-        window.bus.$emit('detailReload');
+
       },
       loadDetails: function () {
         let discussionId = this.$route.query.id;
@@ -275,22 +278,17 @@
           else{
             _this.$alert("找不到文章");
           }
-          _this.loading = false;
         }, resp=> {
-          _this.loading = false;
           _this.$message({type: 'error', message: '页面加载失败!'});
         });
         getRequest("/discussion/comment",{id: discussionId}).then(resp=> {
           if (resp.data.code === 0) {
             _this.comments = resp.data.data.list;
-            _this.$alert(_this.comments);
           }
           else{
             _this.$alert("找不到评论");
           }
-          _this.loading = false;
         }, resp=> {
-          _this.loading = false;
           _this.$message({type: 'error', message: '页面加载失败!'});
         });
       }
@@ -302,8 +300,7 @@
       this.user = sessionStorage.getItem("email");
       this.loadDetails();
       window.bus.$on('detailReload', function () {
-        _this.loading = true;
-        this.loadDetails();
+        _this.loadDetails();
       });
     },
     data(){
@@ -333,11 +330,15 @@
         replyBelow: false,
         edit: true,
         editReply: true,
+        currentCommentId: "",
       }
     },
     computed:{
       publish: function () {
           return formatDate(this.discussion.publishTime);
+      },
+      editTime: function () {
+        return formatDate(this.discussion.lastEditTime);
       },
     },
   }
