@@ -144,28 +144,57 @@
       },
       loadBlogs(page, size){
         let _this = this;
-        getRequest("/discussion/all",
-          {majorName: sessionStorage.getItem('majorName'),
-            property: _this.activeName,
-            page: page,
-            size: size,
-          }).then(resp=> {
-          _this.loading = false;
-          if (resp.data.code === 0) {
-            _this.discussions = resp.data.data.content;
-            _this.totalPages = resp.data.data.totalPages;
-            _this.totalElements = resp.data.data.totalElements;
-          } else {
-            _this.$message({type: 'error', message: '查询出错!'});
-          }
-        }, resp=> {
-          _this.loading = false;
-          _this.$message({type: 'error', message: '数据加载失败!'});
-        }).catch(resp=> {
-          //压根没见到服务器
-          _this.loading = false;
-          _this.$message({type: 'error', message: '服务器错误!'});
-        })
+        if(_this.activeName !== "follow") {
+          getRequest("/discussion/all",
+            {
+              majorName: sessionStorage.getItem('majorName'),
+              property: _this.activeName,
+              page: page,
+              size: size,
+              keyword: _this.keywords,
+            }).then(resp => {
+            _this.loading = false;
+            if (resp.data.code === 0) {
+              _this.discussions = resp.data.data.content;
+              _this.totalPages = resp.data.data.totalPages;
+              _this.totalElements = resp.data.data.totalElements;
+            } else {
+              _this.$message({type: 'error', message: '查询出错!'});
+            }
+          }, resp => {
+            _this.loading = false;
+            _this.$message({type: 'error', message: '数据加载失败!'});
+          }).catch(resp => {
+            //压根没见到服务器
+            _this.loading = false;
+            _this.$message({type: 'error', message: '服务器错误!'});
+          })
+        }else{
+          getRequest("/discussion/follow",
+            {
+              majorName: sessionStorage.getItem('majorName'),
+              email: sessionStorage.getItem('email'),
+              page: page,
+              size: size,
+              keyword: _this.keywords,
+            }).then(resp => {
+            _this.loading = false;
+            if (resp.data.code === 0) {
+              _this.discussions = resp.data.data.content;
+              _this.totalPages = resp.data.data.totalPages;
+              _this.totalElements = resp.data.data.totalElements;
+            } else {
+              _this.$message({type: 'error', message: '查询出错!'});
+            }
+          }, resp => {
+            _this.loading = false;
+            _this.$message({type: 'error', message: '数据加载失败!'});
+          }).catch(resp => {
+            //压根没见到服务器
+            _this.loading = false;
+            _this.$message({type: 'error', message: '服务器错误!'});
+          })
+        }
       },
       handleSelectionChange(val) {
         this.selItems = val;

@@ -78,7 +78,7 @@
       }
     },
     mounted: function () {
-      this.$alert('为了确保所有的小伙伴都能看到完整的数据演示，数据库只开放了查询权限和部分字段的更新权限，其他权限都不具备，完整权限的演示需要大家在自己本地部署后，换一个正常的数据库用户后即可查看，这点请大家悉知!', '友情提示', {
+      this.$alert(sessionStorage.getItem('nickname') + '欢迎您', '友情提示', {
         confirmButtonText: '确定',
         callback: action => {
         }
@@ -127,8 +127,9 @@
   }
 
   .home_title {
-    color: #fff;
-    font-size: 22px;
+    /*color: #fff;*/
+    color: aquamarine;
+    font-size: 28px;
     display: inline;
   }
 

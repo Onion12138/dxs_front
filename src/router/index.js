@@ -71,26 +71,26 @@ export default new Router({
     }, {
       path: '/home',
       component: Home,
-      name: '文章管理',
+      name: '专业讨论区',
       iconCls: 'fa fa-file-text-o',
       children: [
         {
           path: '/articleList',
-          name: '文章列表',
+          name: '讨论区列表',
           component: ArticleList,
           meta: {
             keepAlive: true
           }
         }, {
           path: '/postArticle',
-          name: '发表文章',
+          name: '发表讨论',
           component: PostArticle,
           meta: {
             keepAlive: false
           }
         }, {
           path: '/blogDetail',
-          name: '博客详情',
+          name: '讨论详情',
           component: BlogDetail,
           hidden: true,
           meta: {
@@ -98,7 +98,7 @@ export default new Router({
           }
         }, {
           path: '/editBlog',
-          name: '编辑博客',
+          name: '编辑讨论',
           component: PostArticle,
           hidden: true,
           meta: {
@@ -109,12 +109,12 @@ export default new Router({
     }, {
       path: '/home',
       component: Home,
-      name: '用户管理',
+      name: '主页',
       children: [
         {
           path: '/user',
           iconCls: 'fa fa-user-o',
-          name: '用户管理',
+          name: '专业人脉',
           component: UserMana
         }
       ]
