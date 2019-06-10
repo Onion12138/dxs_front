@@ -42,7 +42,7 @@
 <script>
   import {getRequest, postRequest} from "../utils/api";
 
-    export default {
+  export default {
         name: "InfoDetail",
         data(){
           return {

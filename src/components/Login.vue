@@ -62,7 +62,7 @@
                 sessionStorage.setItem("token",resp.data.data.token);
                 sessionStorage.setItem("email",resp.data.data.email);
                 //sessionStorage.setItem("majorName",resp.data.data.majorName);
-                sessionStorage.setItem("majorName","软件工程");
+                sessionStorage.setItem("majorName",resp.data.data.majorName);
                 if(resp.data.code === 0){
                   _this.$router.replace({path: '/home'});
                 }else{

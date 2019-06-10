@@ -1,6 +1,6 @@
 <template>
   <el-row >
-    <el-col :span="24">
+    <el-col :span="24" justify="space-between">
       <div style="text-align: left;">
         <el-button type="text" icon="el-icon-back" @click="goBack" style="padding-bottom: 0px;">返回</el-button>
       </div>
@@ -37,7 +37,9 @@
       <el-button type="primary" icon="el-icon-star-off" v-if="discussion.email!==user && !star" @click="handleStar">点赞</el-button>
       <el-button type="primary" icon="el-icon-star-on" v-if="discussion.email!==user && star">你已赞过</el-button>
       <el-button type="primary" icon="el-icon-chat-dot-round" v-if="discussion.email!==user && !reply" @click="handleComment">回复</el-button>
-      <el-button type="primary" icon="el-icon-chat-line-square" v-if="discussion.email!==user && reply" @click="handleConfirm">确认回复</el-button>
+      <el-button type="success" icon="el-icon-chat-line-square" v-if="discussion.email!==user && reply" @click="handleConfirm">确认回复</el-button>
+      <el-button type="warning" icon="el-icon-chat-line-square" v-if="discussion.email!==user && reply" @click="handleGiveUp">放弃修改</el-button>
+
     </el-col>
     <el-col>
       <el-input
@@ -60,7 +62,7 @@
         max-height="390"
         @selection-change="handleSelectionChange" >
         <el-table-column
-          label="内容" prop="content"
+          label="评论" prop="content"
           width="600" align="left">
 <!--          <template slot-scope="scope"><span style="color: #409eff;cursor: pointer" @click="itemClick(scope.row)">{{ scope.row.content}}</span>-->
 <!--          </template>-->
@@ -71,8 +73,8 @@
           <template slot-scope="scope">{{ scope.row.lastEditTime | formatDateTime}}</template>
         </el-table-column>
         <el-table-column
-          prop="email"
-          label="作者"
+          prop="nickname"
+          label="发布人"
           width="120" align="left">
         </el-table-column>
 
@@ -100,16 +102,6 @@
               type="primary" icon="el-icon-edit-outline"
               @click="handleCommentBelow(scope.row.commentId)" v-if="scope.row.email !== user && edit">回复
             </el-button>
-<!--            <el-button-->
-<!--              size="mini"-->
-<!--              type="primary"-->
-<!--              @click="handleCommentBelow(scope.$index, scope.row)" v-if="scope.row.email !== user && !editReply">保存-->
-<!--            </el-button>-->
-<!--            <el-button-->
-<!--              size="mini"-->
-<!--              type="primary"-->
-<!--              @click="handleCommentBelow(scope.$index, scope.row)" v-if="scope.row.email !== user && !editReply">放弃修改-->
-<!--            </el-button>-->
           </template>
         </el-table-column>
       </el-table>
@@ -124,6 +116,16 @@
         v-if="replyBelow">
       </el-input>
     </el-col>
+    <el-col>
+    <el-pagination
+      background
+      :page-size="pageSize"
+      :pager-count="7"
+      :total="totalCount"
+      layout="prev, pager, next, jumper"
+      @current-change="handlePage" v-show="true">
+    </el-pagination>
+    </el-col>
   </el-row>
 
 
@@ -137,6 +139,9 @@
       goBack(){
         this.$router.go(-1);
         window.bus.$emit('blogTableReload');
+      },
+      handlePage: function (currentPage){
+        this.loadDetails(currentPage,this.pageSize);
       },
       handleEdit: function () {
         this.$router.push({path: '/editBlog', query: {from: "detail",id:this.discussion.id}});
@@ -166,6 +171,7 @@
       handleGiveUp: function(){
         this.edit = true;
         this.replyBelow = false;
+        this.reply = false;
       },
       handleCommentBelow: function(commentId){
         this.replyBelow = true;
@@ -181,6 +187,7 @@
               email: sessionStorage.getItem('email'),
               content: _this.contentBelow,
               parentId: commentId,
+              nickname: sessionStorage.getItem('nickname'),
             }).then(resp => {
               if (resp.data.code === 0) {
                 _this.$alert("回复成功");
@@ -250,6 +257,7 @@
             discussionId: _this.discussion.id,
             email: sessionStorage.getItem("email"),
             content: _this.content,
+            nickname: sessionStorage.getItem("nickname"),
           }).then(resp => {
             if (resp.data.code === 0) {
               _this.$alert("评论成功");
@@ -268,10 +276,12 @@
         }
 
       },
-      loadDetails: function () {
+      loadDetails: function (page,size) {
         let discussionId = this.$route.query.id;
         let _this = this;
-        getRequest("/discussion",{id: discussionId}).then(resp=> {
+        getRequest("/discussion",
+          {id: discussionId}
+          ).then(resp=> {
           if (resp.data.code === 0) {
             _this.discussion = resp.data.data;
           }
@@ -281,9 +291,15 @@
         }, resp=> {
           _this.$message({type: 'error', message: '页面加载失败!'});
         });
-        getRequest("/discussion/comment",{id: discussionId}).then(resp=> {
+        getRequest("/discussion/comment",
+          {id: discussionId,
+          page: page,
+          size: size,
+          }).then(resp=> {
           if (resp.data.code === 0) {
             _this.comments = resp.data.data.list;
+            // _this.totalPages = resp.data.data.
+            _this.totalCount = resp.data.data.total;
           }
           else{
             _this.$alert("找不到评论");
@@ -300,7 +316,7 @@
       this.user = sessionStorage.getItem("email");
       this.loadDetails();
       window.bus.$on('detailReload', function () {
-        _this.loadDetails();
+        _this.loadDetails(1,this.pageSize);
       });
     },
     data(){
@@ -331,6 +347,9 @@
         edit: true,
         editReply: true,
         currentCommentId: "",
+        pageSize: 5,
+        totalCount: 0,
+
       }
     },
     computed:{
