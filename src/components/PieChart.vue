@@ -7,28 +7,49 @@
 
 <script>
   import VePie from 'v-charts/lib/pie'
+  import {postRequest} from '../utils/api'
   export default{
     data () {
       this.chartSetting = {
-
       }
       return {
         chartData: {
           columns: ['company', 'sum'],
           rows: [
-            { 'company': '阿里巴巴', 'sum': 12},
-            { 'company': '百度', 'sum': 22},
-            { 'company': '腾讯', 'sum': 8},
-            { 'company': '京东', 'sum': 19},
-            { 'company': '携程', 'sum': 12},
-            { 'company': '微软', 'sum': 3},
-            { 'company': '拼多多', 'sum': 21},
-            { 'company': '其他', 'sum': 71}
+            { 'company': '', 'sum': ''},
+            { 'company': '', 'sum': ''},
+            { 'company': '', 'sum': ''},
+            { 'company': '', 'sum': ''},
+            { 'company': '', 'sum': ''},
+            { 'company': '', 'sum': ''},
+            { 'company': '', 'sum': ''},
+            { 'company': '', 'sum': ''}
           ]
         }
       }
     },
-    components: { VePie }
+    components: { VePie },
+    mounted() {
+      postRequest('/student/desCompany', {
+        "college": "ecnu",
+        "major": sessionStorage.getItem("major"),
+        "year": 2018,
+        "token": sessionStorage.getItem("token")
+      }).then(res => {
+        if (res.data.code === 0) {
+          let _this = this.chartData.rows;
+          let i = 0;
+          let _data = res.data.data.nameWithCount;
+          for (var temp in _data) {
+            _this[i].company = temp;
+            _this[i].sum = _data[temp];
+            i = i + 1;
+          }
+        } else {
+          this.$alert("加载失败");
+        }
+      })
+    }
   }
 </script>
 

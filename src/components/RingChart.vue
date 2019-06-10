@@ -7,6 +7,7 @@
 
 <script>
   import VeRing from 'v-charts/lib/ring'
+  import {postRequest} from '../utils/api'
   export default{
     data () {
       this.chartSetting = {
@@ -15,19 +16,40 @@
       return {
         chartData: {
           columns: ['city', 'sum'],
-          rows: [
-            { 'city': '上海', 'sum': 132},
-            { 'city': '广州', 'sum': 22},
-            { 'city': '深圳', 'sum': 8},
-            { 'city': '浙江', 'sum': 9},
-            { 'city': '江苏', 'sum': 12},
-            { 'city': '其他', 'sum': 43},
-            { 'city': '北京', 'sum': 31}
-          ]
+          rows:[{
+            'city':'','sum':''
+          },{
+            'city':'','sum':''
+          },{
+            'city':'','sum':''
+          }]
         }
       }
     },
-    components: { VeRing }
+    components: {
+      VeRing
+    },
+    mounted() {
+      postRequest('/student/desCity', {
+        "college": "ecnu",
+        "major": sessionStorage.getItem("major"),
+        "year": 2018,
+        "token": sessionStorage.getItem("token")
+      }).then(res => {
+        if (res.data.code === 0) {
+          let _this = this.chartData.rows;
+          let i = 0;
+          let _data = res.data.data.cityWithCount;
+          for (var temp in _data) {
+            _this[i].city = temp;
+            _this[i].sum = _data[temp];
+            i = i + 1;
+          }
+        } else {
+          _this.$alert("加载失败");
+        }
+      })
+    }
   }
 </script>
 

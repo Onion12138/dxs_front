@@ -1,0 +1,11 @@
+{
+  "code": 0,
+  "msg": "success",
+  "data": {
+    "year": 2018,
+    "college": "ecnu",
+    "major": "CS",
+    "total": 22,
+    "cityWithCount": {"SH":10, "BJ":15, "CQ":2}
+  }
+}

@@ -12,6 +12,7 @@
   import line from 'v-charts/lib/line'
   import histogram from 'v-charts/lib/histogram'
   import pie from 'v-charts/lib/pie'
+  import {postRequest} from '../utils/api'
   export default{
     data () {
       this.typeArr = ['histogram', 'line', 'pie']
@@ -20,10 +21,10 @@
         chartData: {
           columns: ['status', 'sum'],
           rows: [
-            { 'status': '读研', 'sum': 112},
-            { 'status': '工作', 'sum': 215},
-            { 'status': '出国', 'sum': 46},
-            { 'status': '暂未就业', 'sum': 9}
+            { 'status': '读研', 'sum': ''},
+            { 'status': '工作', 'sum': ''},
+            { 'status': '出国', 'sum': ''},
+            { 'status': '暂未就业', 'sum': ''}
           ]
         },
         chartSetting : {
@@ -38,7 +39,25 @@
         this.chartSetting = { type: this.typeArr[this.index] }
       }
     },
-    components: { line, histogram, pie, Vechart }
+    components: { line, histogram, pie, Vechart },
+    mounted() {
+      postRequest('/student/choice', {
+        "college": "ecnu",
+        "major": sessionStorage.getItem("major"),
+        "year": 2018,
+        "token": sessionStorage.getItem("token")
+      }).then(res => {
+        if (res.data.code === 0) {
+          let _this=this.chartData.rows;
+          _this[0].sum = res.data.data.yan;
+          _this[1].sum = res.data.data.work;
+          _this[2].sum = res.data.data.abroad;
+          _this[3].sum = res.data.data.unemployment;
+        }else{
+          this.$alert("加载失败");
+        }
+      })
+    }
   }
 </script>
 

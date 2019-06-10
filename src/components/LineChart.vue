@@ -2,33 +2,57 @@
   <div>
     <div class="title">近五年平均薪资</div>
     <div class="chart-region">
-      <ve-line :data="chartData" :legend-visible="false" :settings="chartSetting"></ve-line>
+      <ve-line :data="chartData" :legend-visible="false" :extend="extend"></ve-line>
     </div>
   </div>
 </template>
 
 <script>
   import VeLine from 'v-charts/lib/line'
+  import {postRequest} from '../utils/api'
   export default{
     data () {
-      this.chartSetting = {
-        min: [8000],
-        max: [16000]
-      }
+      this.extend = {
+        series: {
+          label: {
+            normal: {
+              show: true
+            }
+          }
+        }
+      };
       return {
         chartData: {
           columns: ['year', 'salary'],
           rows: [
-            { 'year': '2015', 'salary': 11393},
-            { 'year': '2016', 'salary': 12530},
-            { 'year': '2017', 'salary': 13923},
-            { 'year': '2018', 'salary': 15323},
-            { 'year': '2019', 'salary': 14592}
+            { 'year': '', 'salary': ''},
+            { 'year': '', 'salary': ''},
+            { 'year': '', 'salary': ''},
+            { 'year': '', 'salary': ''},
+            { 'year': '', 'salary': ''}
           ]
         }
       }
     },
-    components: { VeLine }
+    components: { VeLine },
+    mounted() {
+      postRequest('/student/salaryChange', {
+        "college": "ecnu",
+        "major": sessionStorage.getItem("major"),
+        "year": 2018,
+        "token": sessionStorage.getItem("token")
+      }).then(res => {
+        if (res.data.code === 0) {
+          let _this=this.chartData.rows;
+          for(let i = 0;i < res.data.data.salary.length;i = i+1) {
+            _this[i].year = res.data.data.year[i]+"";
+            _this[i].salary = res.data.data.salary[i]+"";
+          }
+        }else{
+          this.$alert("加载失败");
+        }
+      })
+    }
   }
 </script>
 
