@@ -1,42 +1,42 @@
 <template>
-  <div style="padding:20px;">
-    <h3 class="login_title">信息认证</h3>
-    <el-row >
-    <el-select v-model="listQuery.provinceId" placeholder="省份" class="filter-item"
-               @change="queryCity" >
-      <el-option v-for="(item,index) in provinceList" :key="item.id" :label="item.name" :value="item.id"/>
-    </el-select>
-    </el-row>
-
-    <el-row>
-    <el-select v-model="listQuery.cityName" placeholder="城市" class="filter-item" @change="queryUniversity" >
-    <el-option v-for="(item,index) in cityList" :key="item.id" :label="item.name" :value="item.name" />
-    </el-select>
-    </el-row>
-
-      <el-row>
-    <el-select v-model="listQuery.universityName" placeholder="大学" class="filter-item" @change="queryMajor" >
-      <el-option v-for="(item,index) in universityList" :key="item.id" :label="item.universityName" :value="item.universityName" />
-    </el-select>
+  <el-form :model="registerForm" :rules="rules" ref="registerForm" class="login-container" label-position="left"
+           label-width="20px" >
+      <h3 class="login_title">在校生信息认证</h3>
+      <el-row >
+      <el-select v-model="listQuery.provinceId" placeholder="省份" class="filter-item"
+                 @change="queryCity" >
+        <el-option v-for="(item,index) in provinceList" :key="item.id" :label="item.name" :value="item.id"/>
+      </el-select>
       </el-row>
 
       <el-row>
-    <el-select v-model="listQuery.majorName" placeholder="专业" class="filter-item" @change="" >
-      <el-option v-for="(item,index) in majorList" :key="item.id" :label="item.majorName" :value="item.majorName" />
-    </el-select>
+      <el-select v-model="listQuery.cityName" placeholder="城市" class="filter-item" @change="queryUniversity" >
+      <el-option v-for="(item,index) in cityList" :key="item.id" :label="item.name" :value="item.name" />
+      </el-select>
       </el-row>
 
-      <el-row>
-    <el-select v-model="listQuery.grade" placeholder="年级" class="filter-item" @change="" >
-      <el-option v-for="(item,index) in grade" :key="item.id" :label="item.level" :value="item.id" />
-    </el-select>
-      </el-row>
+        <el-row>
+      <el-select v-model="listQuery.universityName" placeholder="大学" class="filter-item" @change="queryMajor" >
+        <el-option v-for="(item,index) in universityList" :key="item.id" :label="item.universityName" :value="item.universityName" />
+      </el-select>
+        </el-row>
 
-      <el-row>
-    <el-button type="primary" @click.native.prevent="submit" >保存信息</el-button>
-      </el-row>
+        <el-row>
+      <el-select v-model="listQuery.majorName" placeholder="专业" class="filter-item" @change="" >
+        <el-option v-for="(item,index) in majorList" :key="item.id" :label="item.majorName" :value="item.majorName" />
+      </el-select>
+        </el-row>
 
-  </div>
+        <el-row>
+      <el-select v-model="listQuery.grade" placeholder="年级" class="filter-item" @change="" >
+        <el-option v-for="(item,index) in grade" :key="item.id" :label="item.level" :value="item.id" />
+      </el-select>
+        </el-row>
+
+        <el-row>
+      <el-button type="primary" @click.native.prevent="submit" >保存信息</el-button>
+        </el-row>
+  </el-form>
 </template>
 
 <script>
@@ -152,5 +152,20 @@
   .el-row {
     margin-bottom: 20px;
   }
+  .login-container {
+    border-radius: 15px;
+    background-clip: padding-box;
+    margin: 160px auto;
+    width: 350px;
+    padding: 35px 35px 15px 35px;
+    background: #fff;
+    border: 1px solid #eaeaea;
+    box-shadow: 0 0 25px #cac6c6;
+  }
 
+  .login_title {
+    margin: 0px auto 40px auto;
+    text-align: center;
+    color: #505458;
+  }
 </style>
