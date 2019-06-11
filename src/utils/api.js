@@ -37,7 +37,22 @@ export const putRequest = (url, data, params) => {
       return data;
     }],
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+    }
+  });
+}
+export const putRequest2 = (url, data, params) => {
+  return axios({
+    method: 'put',
+    url: `${base}${url}`,
+    data: data,
+    params: params,
+    transformRequest: [function (data) {
+      data = JSON.stringify(data);
+      return data;
+    }],
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
     }
   });
 }

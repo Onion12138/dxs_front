@@ -14,6 +14,13 @@ Vue.filter("formatDate", function formatDate(value) {
   return year + "-" + month + "-" + day;
 });
 */
+Vue.filter("handleFilter", function handleFilter(value) {
+  if(value === false){
+    return "未读"
+  }else{
+    return "已读"
+  }
+});
 Vue.filter("formatDateTime", function formatDateTime(value) {
   var date = new Date(value);
   var year = date.getFullYear();

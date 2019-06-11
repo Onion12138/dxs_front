@@ -17,6 +17,7 @@ import PersonalInfo from '@/components/PersonalInfo'
 import InfoDetail from "../components/InfoDetail";
 import GraduateInfoDetail from "../components/GraduateInfoDetail";
 import Test from "@/components/Test"
+import SystemMessage from "@/components/SystemMessage"
 Vue.use(Router)
 
 export default new Router({
@@ -24,6 +25,12 @@ export default new Router({
     {
       path: '/test',
       component: Test,
+      hidden: true
+
+    },
+    {
+      path: '/systemMessage',
+      component: SystemMessage,
       hidden: true
 
     },
