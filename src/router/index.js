@@ -6,6 +6,7 @@ import ArticleList from '@/components/ArticleList'
 import CateMana from '@/components/CateMana'
 import PostArticle from '@/components/PostArticle'
 import UserMana from '@/components/UserMana'
+import Peers from '@/components/Peers'
 import BlogDetail from '@/components/BlogDetail'
 import Register from '@/components/Register'
 import Reset from '@/components/Reset'
@@ -109,13 +110,23 @@ export default new Router({
     }, {
       path: '/home',
       component: Home,
-      name: '主页',
+      name: '专业人脉',
+      iconCls: 'fa fa-user-o',
       children: [
         {
-          path: '/user',
-          iconCls: 'fa fa-user-o',
-          name: '专业人脉',
-          component: UserMana
+          path: '/classmates',
+          name: '同学校&专业',
+          component: UserMana,
+          meta: {
+            keepAlive: true
+          }
+        },{
+          path: '/peers',
+          name: '同专业',
+          component: Peers,
+          meta: {
+            keepAlive: false
+          }
         }
       ]
     }, {
