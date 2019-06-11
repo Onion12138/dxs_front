@@ -75,8 +75,8 @@
     methods: {
       followUser(email) {
         postRequest("/follow/addFollow",{},{
-          followingEmail: email,
-          followedEmail: sessionStorage.getItem("email"),
+          followingEmail: sessionStorage.getItem("email"),
+          followedEmail: email,
         }).then(resp=>{
           if (resp.data.code === 0) {
             _this.$alert("操作成功");
@@ -87,8 +87,8 @@
       },
       unfollowUser(email) {
         deleteRequest("/follow/cancelFollow",{
-          followingEmail: email,
-          followedEmail: sessionStorage.getItem("email"),
+          followingEmail: sessionStorage.getItem("email"),
+          followedEmail: email,
         }).then(resp=>{
           if (resp.data.code === 0){
             _this.$alert("操作成功");
@@ -152,7 +152,7 @@
         loading: false,
         users: [],
         pageNum: 1,
-        pageSize: 20,
+        pageSize: 5,
         pages: -1,
         total: 0,
         // allRoles: [],
