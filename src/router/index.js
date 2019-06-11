@@ -121,19 +121,19 @@ export default new Router({
     }, {
       path: '/home',
       component: Home,
-      name: '栏目管理',
+      name: '专业详情',
       children: [
         {
           path: '/cateMana',
           iconCls: 'fa fa-reorder',
-          name: '栏目管理',
+          name: '专业详情',
           component: CateMana
         }
       ]
     }, {
       path: '/home',
       component: Home,
-      name: '数据统计',
+      name: '专业数据',
       iconCls: 'fa fa-bar-chart',
       children: [
         {

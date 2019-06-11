@@ -109,6 +109,7 @@
             ).then(resp => {
               if (resp.data.code === 0) {
                 _this.$alert('注册成功');
+                _this.$router.replace({path: '/'});
               } else {
                 _this.$alert(resp.data.msg);
               }

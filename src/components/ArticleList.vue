@@ -15,7 +15,10 @@
           <blog_table state="2" :showEdit="false" :showDelete="true" :activeName="activeName"></blog_table>
         </el-tab-pane>
         <el-tab-pane label="我关注的" name="follow">
-          <blog_table state="-2" :showEdit="false" :showDelete="true" :activeName="activeName"></blog_table>
+        <blog_table state="-2" :showEdit="false" :showDelete="true" :activeName="activeName"></blog_table>
+        </el-tab-pane>
+        <el-tab-pane label="我发布的" name="mine">
+          <blog_table state="-3" :showEdit="false" :showDelete="true" :activeName="activeName"></blog_table>
         </el-tab-pane>
 <!--        <el-tab-pane label="博客配置" name="blogcfg">-->
 <!--          <blog_cfg></blog_cfg>-->

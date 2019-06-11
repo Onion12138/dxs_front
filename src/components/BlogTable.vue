@@ -12,7 +12,7 @@
   <div>
     <div style="display: flex;justify-content: flex-start">
       <el-input
-        placeholder="通过标题搜索该分类下的博客..."
+        placeholder="通过标题搜索讨论..."
         prefix-icon="el-icon-search"
         v-model="keywords" style="width: 400px" size="mini">
       </el-input>
@@ -144,7 +144,7 @@
       },
       loadBlogs(page, size){
         let _this = this;
-        if(_this.activeName !== "follow") {
+        if(_this.activeName !== "follow" && _this.activeName !== 'mine') {
           getRequest("/discussion/all",
             {
               majorName: sessionStorage.getItem('majorName'),
@@ -169,7 +169,7 @@
             _this.loading = false;
             _this.$message({type: 'error', message: '服务器错误!'});
           })
-        }else{
+        }else if(_this.activeName === 'follow'){
           getRequest("/discussion/follow",
             {
               majorName: sessionStorage.getItem('majorName'),
@@ -177,6 +177,54 @@
               page: page,
               size: size,
               keyword: _this.keywords,
+            }).then(resp => {
+            _this.loading = false;
+            if (resp.data.code === 0) {
+              _this.discussions = resp.data.data.content;
+              _this.totalPages = resp.data.data.totalPages;
+              _this.totalElements = resp.data.data.totalElements;
+            } else {
+              _this.$message({type: 'error', message: '查询出错!'});
+            }
+          }, resp => {
+            _this.loading = false;
+            _this.$message({type: 'error', message: '数据加载失败!'});
+          }).catch(resp => {
+            //压根没见到服务器
+            _this.loading = false;
+            _this.$message({type: 'error', message: '服务器错误!'});
+          })
+        }else if(_this.activeName === 'follow'){
+          getRequest("/discussion/follow",
+            {
+              majorName: sessionStorage.getItem('majorName'),
+              email: sessionStorage.getItem('email'),
+              page: page,
+              size: size,
+              keyword: _this.keywords,
+            }).then(resp => {
+            _this.loading = false;
+            if (resp.data.code === 0) {
+              _this.discussions = resp.data.data.content;
+              _this.totalPages = resp.data.data.totalPages;
+              _this.totalElements = resp.data.data.totalElements;
+            } else {
+              _this.$message({type: 'error', message: '查询出错!'});
+            }
+          }, resp => {
+            _this.loading = false;
+            _this.$message({type: 'error', message: '数据加载失败!'});
+          }).catch(resp => {
+            //压根没见到服务器
+            _this.loading = false;
+            _this.$message({type: 'error', message: '服务器错误!'});
+          })
+        }else{
+          getRequest("/discussion/mine",
+            {
+              email: sessionStorage.getItem('email'),
+              page: page,
+              size: size,
             }).then(resp => {
             _this.loading = false;
             if (resp.data.code === 0) {

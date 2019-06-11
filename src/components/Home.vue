@@ -61,8 +61,8 @@
   export default{
     methods: {
       handleCommand(command){
-        var _this = this;
-        if (command == 'logout') {
+        let _this = this;
+        if (command === 'logout') {
           this.$confirm('注销登录吗?', '提示', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
@@ -75,7 +75,37 @@
             //取消
           })
         }
+      },
+      websocketonopen: function(){
+        console.log("连接成功");
+      },
+      websocketonclose: function(){
+        console.log("连接关闭");
+      },
+      websocketonerror: function(){
+        console.log("连接错误");
+      },
+      websocketonmessage: function(e){
+        this.$notify({
+          title: '消息',
+          message: e.data,
+        });
+        // var da = JSON.parse(e.data);
+        console.log(e);
+      },
+      initWebSocket: function () {
+        this.websock = new WebSocket("ws://localhost:8080/websocket/" + this.email);
+        this.websock.onopen = this.websocketonopen;
+        this.websock.onmessage = this.websocketonmessage;
+        this.websock.onclose = this.websocketonclose;
+        this.websock.onerror = this.websocketonerror;
       }
+    },
+    created() {
+      this.initWebSocket();
+    },
+    destroyed() {
+      this.websocketonclose();
     },
     mounted: function () {
       this.$alert(sessionStorage.getItem('nickname') + '欢迎您', '友情提示', {
@@ -83,17 +113,14 @@
         callback: action => {
         }
       });
-      var _this = this;
+      let _this = this;
       this.currentUserName = sessionStorage.getItem("nickname");
-      /*getRequest("/").then(function (msg) {
-        _this.currentUserName = msg.data;
-      }, function (msg) {
-        _this.currentUserName = '游客';
-      });*/
+
     },
     data(){
       return {
-        currentUserName: ''
+        currentUserName: '',
+        email: sessionStorage.getItem('email')
       }
     }
   }
