@@ -1,0 +1,13 @@
+{
+  "code": 0,
+  "msg": "success",
+  "data": {
+    "yaer": 2018,
+    "college": "ecnu",
+    "major": "se",
+    "yan": 50,
+    "work": 100,
+    "abroad": 50,
+    "unemployment": 5
+  }
+}

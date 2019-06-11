@@ -1,0 +1,54 @@
+{
+  "code": 0,
+  "msg": "success",
+  "data": {
+    "a": "wgfw",
+    "b": "dewwcf",
+    "total": 2,
+    "list": [
+      {
+        "nickname": "嘤嘤嘤之王",
+        "email": "pf@gmail.com",
+        "universityName": "ecnu",
+        "majorName": "se",
+        "scores": 1,
+        "grade": 2
+      },
+      {
+        "nickname": "嘤嘤嘤之爹",
+        "email": "pf2@gmail.com",
+        "universityName": "ecnu",
+        "majorName": "se",
+        "scores": 1,
+        "grade": 3
+      },
+      {
+        "nickname": "嘤嘤嘤之爹",
+        "email": "pf2@gmail.com",
+        "universityName": "ecnu",
+        "majorName": "se",
+        "scores": 1,
+        "grade": 3
+      },
+      {
+        "nickname": "嘤嘤嘤之爹",
+        "email": "pf2@gmail.com",
+        "universityName": "ecnu",
+        "majorName": "se",
+        "scores": 1,
+        "grade": 3
+      },
+      {
+        "nickname": "嘤嘤嘤之爹",
+        "email": "pf2@gmail.com",
+        "universityName": "ecnu",
+        "majorName": "se",
+        "scores": 1,
+        "grade": 3
+      }
+    ],
+    "pageNum": 1,
+    "pageSize": 20,
+    "pages": 1
+  }
+}
