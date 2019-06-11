@@ -61,7 +61,7 @@
                 sessionStorage.setItem("nickname", resp.data.data.nickname);
                 sessionStorage.setItem("token",resp.data.data.token);
                 sessionStorage.setItem("email",resp.data.data.email);
-                //sessionStorage.setItem("majorName",resp.data.data.majorName);
+                sessionStorage.setItem("universityName",resp.data.data.universityName);
                 sessionStorage.setItem("majorName",resp.data.data.majorName);
                 if(resp.data.code === 0){
                   _this.$router.replace({path: '/home'});

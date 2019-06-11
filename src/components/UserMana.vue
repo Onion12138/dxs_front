@@ -54,7 +54,7 @@
 </template>
 <script>
   import {getRequest,postRequest,deleteRequest,putRequest} from '../utils/api'
-  import axios from 'axios'
+  // import axios from 'axios'
   export default{
     mounted: function () {
       // this.loading = true;
@@ -169,7 +169,7 @@
         });
       },
       loadOneUserByEmail(email, index) {
-        let _this = this;
+        var _this = this;
         getRequest("/admin/user/" + id).then(resp => {
           _this.cardloading.splice(index, 1, false)
           if (resp.status == 200) {
@@ -188,16 +188,16 @@
       loadUserList() {
         let _this = this;
         let token = sessionStorage.getItem("token");
-        getRequest("/student/classmates",{
+        getRequest("/student/classmates", {
           token: token,
           page: _this.page,
           size: _this.size,
         }).then(resp => {
-         _this.loading = false;
+          // _this.loading = false;
           if (resp.data.code === 0) {
             _this.users = resp.data.data.list;
             _this.total = resp.data.data.total;
-            //todo page改变
+
           } else if (resp.data.code === -3) {
             _this.$message({type: 'error', message: resp.data.msg});
           } else {
