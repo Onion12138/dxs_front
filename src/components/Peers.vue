@@ -142,7 +142,7 @@
       loadUserList(pageNum, pageSize) {
         let _this = this;
         let token = sessionStorage.getItem("token");
-        getRequest("/student/classmates", {
+        getRequest("/student/peers", {
           token: token,
           page: pageNum,
           size: pageSize,

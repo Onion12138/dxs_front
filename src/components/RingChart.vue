@@ -33,14 +33,14 @@
       postRequest('/student/desCity', {
         "college": sessionStorage.getItem("universityName"),
         "major": sessionStorage.getItem("majorName"),
-        "year": 2018,
+        "year": 2019,
         "token": sessionStorage.getItem("token"),
       }).then(res => {
         if (res.data.code === 0) {
           let _this = this.chartData.rows;
           let i = 0;
           let _data = res.data.data.cityWithCount;
-          for (var temp in _data) {
+          for (let temp in _data) {
             _this[i].city = temp;
             _this[i].sum = _data[temp];
             i = i + 1;

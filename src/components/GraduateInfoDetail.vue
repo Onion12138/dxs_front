@@ -1,5 +1,6 @@
 <template>
-  <div style="padding:20px;">
+  <el-form :model="registerForm" :rules="rules" ref="registerForm" class="login-container" label-position="left"
+           label-width="20px" >
     <h3 class="login_title">毕业生信息认证</h3>
     <el-row >
       <el-select v-model="listQuery.provinceId" placeholder="省份" class="filter-item"
@@ -50,7 +51,7 @@
       <el-button type="primary" @click.native.prevent="submit" >保存信息</el-button>
     </el-row>
 
-  </div>
+  </el-form>
 </template>
 
 <script>
@@ -189,5 +190,20 @@
   .el-row {
     margin-bottom: 20px;
   }
+  .login-container {
+    border-radius: 15px;
+    background-clip: padding-box;
+    margin: 80px auto;
+    width: 350px;
+    padding: 35px 35px 15px 35px;
+    background: #fff;
+    border: 1px solid #eaeaea;
+    box-shadow: 0 0 25px #cac6c6;
+  }
 
+  .login_title {
+    margin: 0px auto 40px auto;
+    text-align: center;
+    color: #505458;
+  }
 </style>
