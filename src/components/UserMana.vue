@@ -77,10 +77,25 @@
         postRequest("/follow/addFollow",{},{
           followingEmail: email,
           followedEmail: sessionStorage.getItem("email"),
-        })
+        }).then(resp=>{
+          if (resp.data.code === 0) {
+            _this.$alert("操作成功");
+          }else {
+            _this.$message({type: 'error', message: '操作失败!'});
+          }
+        });
       },
       unfollowUser(email) {
-
+        deleteRequest("/follow/cancelFollow",{
+          followingEmail: email,
+          followedEmail: sessionStorage.getItem("email"),
+        }).then(resp=>{
+          if (resp.data.code === 0){
+            _this.$alert("操作成功");
+          } else{
+            _this.$message({type: 'error', message: '操作失败!'});
+          }
+        });
       },
       handlePage: function (currentPage){
         this.loadUserList(currentPage,this.pageSize);
