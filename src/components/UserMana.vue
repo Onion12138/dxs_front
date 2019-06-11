@@ -2,11 +2,13 @@
   <div v-loading="loading">
     <div style="margin-top: 10px;display: flex;justify-content: center">
       <el-input
-        placeholder="默认展示部分同学，可以通过用户名搜索同学..."
+        placeholder="通过邮箱或用户名查找..."
         prefix-icon="el-icon-search"
         v-model="keywords" style="width: 400px" size="small">
       </el-input>
-      <el-button type="primary" icon="el-icon-search" size="small" style="margin-left: 3px" @click="searchClick">搜索
+      <el-button type="primary" icon="el-icon-search" size="small" style="margin-left: 3px" @click="loadOneUserByEmail(keywords)">搜索邮箱
+      </el-button>
+      <el-button type="primary" icon="el-icon-search" size="small" style="margin-left: 3px" @click="loadOneUserByNickname(keywords)">搜索昵称
       </el-button>
     </div>
     <div style="display: flex;justify-content: space-around;flex-wrap: wrap">
@@ -50,6 +52,14 @@
         </div>
       </el-card>
     </div>
+    <el-pagination
+      background
+      :page-size="pageSize"
+      :pager-count="7"
+      :total="total"
+      layout="prev, pager, next, jumper"
+      @current-change="handlePage" v-show="true">
+    </el-pagination>
   </div>
 </template>
 <script>
@@ -58,140 +68,56 @@
   export default{
     mounted: function () {
       // this.loading = true;
-      this.page = 1;
-      this.size = 20;
-      this.loadUserList();
-      // this.cardloading = Array.apply(null, Array(20)).map(function (item, i) {
-      //   return false;
-      // });
-      // this.eploading = Array.apply(null, Array(20)).map(function (item, i) {
-      //   return false;
-      // });
+      let page = this.pageNum;
+      let size = this.pageSize;
+      this.loadUserList(page,size);
     },
     methods: {
-
-      showRole(aRoles, id, index) {
-        this.cpRoles = aRoles;
-        this.roles = [];
-        this.loadRoles(index);
-        for (var i = 0; i < aRoles.length; i++) {
-          this.roles.push(aRoles[i].id);
-        }
-      },
       followUser(email) {
-
+        postRequest("/follow/addFollow",{},{
+          followingEmail: email,
+          followedEmail: sessionStorage.getItem("email"),
+        })
       },
       unfollowUser(email) {
 
       },
-
-      /*deleteUser(followingEmail){
-        var _this = this;
-          this.$confirm('取消关注该用户, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          _this.loading = true;
-          var myEmail = sessionStorage.getItem("email");
-          deleteRequest("/follow/cancelFollow?followingEmail=" + followingEmail+"&followedEmail="+myEmail).then(resp=> {
-            if (resp.status == 200 && resp.data.status == 'success') {
-              _this.$message({type: 'success', message: '删除成功!'})
-              _this.loadUserList();
-              return;
-            }
-            _this.loading = false;
-            _this.$message({type: 'error', message: '删除失败!'})
-          }, resp=> {
-            _this.loading = false;
-            _this.$message({type: 'error', message: '删除失败!'})
-          });
-        }).catch(() => {
-          _this.$message({
-            type: 'info',
-            message: '已取消删除'
-          });
-        });
+      handlePage: function (currentPage){
+        this.loadUserList(currentPage,this.pageSize);
       },
-      enabledChange(enabled, id, index){
-        var _this = this;
-        _this.cardloading.splice(index, 1, true)
-        putRequest("/admin/user/enabled", {enabled: enabled, uid: id}).then(resp=> {
-          if (resp.status != 200) {
-            _this.$message({type: 'error', message: '更新失败!'})
-            _this.loadOneUserById(id, index);
-            return;
-          }
-          _this.cardloading.splice(index, 1, false)
-          _this.$message({type: 'success', message: '更新成功!'})
-        }, resp=> {
-          _this.$message({type: 'error', message: '更新失败!'})
-          _this.loadOneUserById(id, index);
-        });
-      },*/
+      loadOneUserByNickname(nickname) {
+        let _this = this;
+        getRequest("/student/findOneByNickname", {
+            nickname: nickname,
+        }).then(resp => {
+          //这里返回格式不一样了
+          if (resp.data.code === 0) {
 
-      /**留**/
-
-
-      loadRoles(index) {
-        var _this = this;
-        // _this.eploading.splice(index, 1, true)
-        getRequest("/admin/roles").then(resp => {
-          _this.eploading.splice(index, 1, false)
-          if (resp.status == 200) {
-            _this.allRoles = resp.data;
+            _this.users = resp.data.data;
           } else {
             _this.$message({type: 'error', message: '数据加载失败!'});
           }
-        }, resp => {
-          _this.eploading.splice(index, 1, false)
-          if (resp.response.status == 403) {
-            var data = resp.response.data;
-            _this.$message({type: 'error', message: data});
-          }
         });
       },
-      loadOneUserBynickname(nickname, index) {
-        var _this = this;
-        getRequest("/admin/user/" + nickname).then(resp => {
-          // _this.cardloading.splice(index, 1, false)
-          if (resp.status == 200) {
-            _this.users.splice(index, 1, resp.data);
+      loadOneUserByEmail(email) {
+        let _this = this;
+        getRequest("/student/findOneByEmail", {
+          email: email,
+        }).then(resp => {
+          if (resp.data.code === 0) {
+            _this.users[0] = resp.data.data;
           } else {
             _this.$message({type: 'error', message: '数据加载失败!'});
           }
-        }, resp => {
-          // _this.cardloading.splice(index, 1, false)
-          if (resp.response.status == 403) {
-            var data = resp.response.data;
-            _this.$message({type: 'error', message: data});
-          }
         });
       },
-      loadOneUserByEmail(email, index) {
-        var _this = this;
-        getRequest("/admin/user/" + id).then(resp => {
-          _this.cardloading.splice(index, 1, false)
-          if (resp.status == 200) {
-            _this.users.splice(index, 1, resp.data);
-          } else {
-            _this.$message({type: 'error', message: '数据加载失败!'});
-          }
-        }, resp => {
-          _this.cardloading.splice(index, 1, false)
-          if (resp.response.status == 403) {
-            var data = resp.response.data;
-            _this.$message({type: 'error', message: data});
-          }
-        });
-      },
-      loadUserList() {
+      loadUserList(pageNum, pageSize) {
         let _this = this;
         let token = sessionStorage.getItem("token");
         getRequest("/student/classmates", {
           token: token,
-          page: _this.page,
-          size: _this.size,
+          page: pageNum,
+          size: pageSize,
         }).then(resp => {
           // _this.loading = false;
           if (resp.data.code === 0) {
@@ -201,21 +127,17 @@
           } else if (resp.data.code === -3) {
             _this.$message({type: 'error', message: resp.data.msg});
           } else {
-            _this.$message({type: 'error', message: '数据加载失败!'});
+            _this.$alert({type: 'error', message: '数据加载失败!'});
           }
         })
-      },
-      searchClick() {
-        this.loading = true;
-        //this.loadOneUserById();
       }
     },
     data(){
       return {
         loading: false,
         users: [],
-        page: 1,
-        size: 20,
+        pageNum: 1,
+        pageSize: 20,
         pages: -1,
         total: 0,
         // allRoles: [],

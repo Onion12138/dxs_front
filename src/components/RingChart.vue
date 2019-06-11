@@ -46,7 +46,7 @@
             i = i + 1;
           }
         } else {
-          _this.$alert("加载失败");
+          this.$alert("加载失败");
         }
       })
     }
