@@ -21,7 +21,7 @@
           </el-button>-->
         </div>
         <div>
-          <div><img src="#" alt="#" style="width: 70px;height: 70px"></div>
+          <div><img src="https://mpy634.cn/img/ironman-draw.png" alt="头像" style="width: 70px;height: 70px"></div>
           <div style="text-align: left;color:#20a0ff;font-size: 15px;margin-top: 5px;">
             <span>用户名:&#8194;</span><span>{{user.nickname}}</span>
           </div>
@@ -104,30 +104,37 @@
       },
       loadOneUserByNickname(nickname) {
         let _this = this;
-        getRequest("/student/findOneByNickname", {
+        if (nickname === '') {
+        } else {
+          getRequest("/student/findOneByNickname", {
             nickname: nickname,
-        }).then(resp => {
-          //这里返回格式不一样了
-          if (resp.data.code === 0) {
-            _this.users = resp.data.data;
+          }).then(resp => {
+            //这里返回格式不一样了
+            if (resp.data.code === 0) {
+              _this.users = resp.data.data;
 
-          } else {
-            _this.$message({type: 'error', message: '数据加载失败!'});
-          }
-        });
+            } else {
+              _this.$message({type: 'error', message: '数据加载失败!'});
+            }
+          });
+        }
+
       },
       loadOneUserByEmail(email) {
         let _this = this;
-        getRequest("/student/findOneByEmail", {
-          email: email,
-        }).then(resp => {
-          if (resp.data.code === 0) {
-            _this.users = {};
-            _this.users[0] = resp.data.data;
-          } else {
-            _this.$message({type: 'error', message: '数据加载失败!'});
-          }
-        });
+        if (email === ''){
+        } else{
+          getRequest("/student/findOneByEmail", {
+            email: email,
+          }).then(resp => {
+            if (resp.data.code === 0) {
+              _this.users = {};
+              _this.users[0] = resp.data.data;
+            } else {
+              _this.$message({type: 'error', message: '数据加载失败!'});
+            }
+          });
+        }
       },
       loadUserList(pageNum, pageSize) {
         let _this = this;

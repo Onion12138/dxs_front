@@ -39,7 +39,7 @@
       postRequest('/student/salaryChange', {
         "college": sessionStorage.getItem("universityName"),
         "major": sessionStorage.getItem("majorName"),
-        "year": 2018,
+        "year": 2019,
         "token": sessionStorage.getItem("token"),
       }).then(res => {
         if (res.data.code === 0) {
