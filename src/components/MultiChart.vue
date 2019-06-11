@@ -42,10 +42,10 @@
     components: { line, histogram, pie, Vechart },
     mounted() {
       postRequest('/student/choice', {
-        "college": "ecnu",
-        "major": sessionStorage.getItem("major"),
+        "college": sessionStorage.getItem("universityName"),
+        "major": sessionStorage.getItem("majorName"),
         "year": 2018,
-        "token": sessionStorage.getItem("token")
+        "token": sessionStorage.getItem("token"),
       }).then(res => {
         if (res.data.code === 0) {
           let _this=this.chartData.rows;
