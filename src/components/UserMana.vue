@@ -74,6 +74,7 @@
     },
     methods: {
       followUser(email) {
+        let _this = this;
         postRequest("/follow/addFollow",{},{
           followingEmail: sessionStorage.getItem("email"),
           followedEmail: email,
@@ -86,6 +87,7 @@
         });
       },
       unfollowUser(email) {
+        let _this = this;
         deleteRequest("/follow/cancelFollow",{
           followingEmail: sessionStorage.getItem("email"),
           followedEmail: email,
@@ -107,8 +109,8 @@
         }).then(resp => {
           //这里返回格式不一样了
           if (resp.data.code === 0) {
-
             _this.users = resp.data.data;
+
           } else {
             _this.$message({type: 'error', message: '数据加载失败!'});
           }
@@ -120,6 +122,7 @@
           email: email,
         }).then(resp => {
           if (resp.data.code === 0) {
+            _this.users = {};
             _this.users[0] = resp.data.data;
           } else {
             _this.$message({type: 'error', message: '数据加载失败!'});
