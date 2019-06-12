@@ -84,7 +84,11 @@
         }).then(resp=>{
           if (resp.data.code === 0) {
             _this.$alert("操作成功");
-          }else {
+          }else if(resp.data.code !== -1 ) {
+            _this.$message({type: 'error', message: resp.data.msg});
+          }
+          else
+          {
             _this.$message({type: 'error', message: '操作失败!'});
           }
         });
@@ -97,7 +101,10 @@
         }).then(resp=>{
           if (resp.data.code === 0){
             _this.$alert("操作成功");
-          } else{
+          } else if(resp.data.code !== -1){
+            _this.$message({type: 'error', message: resp.data.msg});
+          }
+          else{
             _this.$message({type: 'error', message: '操作失败!'});
           }
         });
@@ -136,7 +143,7 @@
             email: email,
           }).then(resp => {
             if (resp.data.code === 0) {
-              if (resp.data.data.email=null){
+              if (resp.data.data.email!==null){
                 _this.users = {};
                 _this.users[0] = resp.data.data;
                 _this.total = 1;
