@@ -27,13 +27,6 @@ export default new Router({
       path: '/test',
       component: Test,
       hidden: true
-
-    },
-    {
-      path: '/systemMessage',
-      component: SystemMessage,
-      hidden: true
-
     },
     {
       path: '/register',
@@ -47,19 +40,19 @@ export default new Router({
       component: Reset,
       hidden: true
     },
-    {
-      path: '/info',
-      name: '信息',
-      component: InfoDetail,
-      hidden: true
-    },
+    // {
+    //   path: '/personalInfo',
+    //   name: '信息',
+    //   component: PersonalInfo,
+    //   hidden: true
+    // },
     //add
-    {
-      path: '/personalInfo',
-      name: '个人主页',
-      component: PersonalInfo,
-      hidden: true
-    },
+    // {
+    //   path: '/personalInfo',
+    //   name: '个人主页',
+    //   component: PersonalInfo,
+    //   hidden: true
+    // },
     {
       path: '/graduateInfo',
       name: '毕业生信息',
@@ -77,6 +70,36 @@ export default new Router({
       component: Home,
       hidden: true
     }, {
+      path: '/home',
+      name: '系统消息',
+      component: Home,
+      hidden: true,
+      children: [
+        {
+          path: '/systemMessage',
+          name: '系统消息',
+          component: SystemMessage,
+          meta: {
+            keepAlive: false
+          }
+        },
+        // {
+        //   path: '/info',
+        //   name: '个人信息',
+        //   component: InfoDetail,
+        //   mata: {
+        //     keepAlive: false
+        //   }
+        // },
+        {
+          path: '/personalInfo',
+          name: '个人信息',
+          component: PersonalInfo,
+          hidden: true
+        },
+      ]
+    },
+    {
       path: '/home',
       component: Home,
       name: '专业讨论区',

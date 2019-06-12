@@ -44,6 +44,12 @@
 
   export default {
         name: "InfoDetail",
+        mounted: function(){
+          // getRequest("/user",{email:sessionStorage.getItem(email)})
+          //   .then(resp=>{
+          //     listQuery.city =
+          //   })
+        },
         data(){
           return {
             provinceList: [

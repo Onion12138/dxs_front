@@ -27,7 +27,7 @@
       :stripe="true"
       style="width: 100%;overflow-x: hidden; overflow-y: hidden;"
       max-height="390"
-      @selection-change="handleSelectionChange" v-loading="loading">
+      @selection-change="handleSelectionChange" >
       <el-table-column
         label="标题" prop="title"
         width="200" align="left">

@@ -8,12 +8,12 @@
     {{currentUserName}}<i class="el-icon-arrow-down el-icon--right home_userinfo"></i>
   </span>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item command="sysMsg">
+            <el-dropdown-item command="systemMessage">
               系统消息
-              <el-badge class="mark" :value="12" />
+              <el-badge :is-dot="true"/>
             </el-dropdown-item>
-            <el-dropdown-item command="MyArticle">我的文章</el-dropdown-item>
-            <el-dropdown-item command="MyHome">个人主页</el-dropdown-item>
+            <el-dropdown-item command="personalInfo">个人信息</el-dropdown-item>
+            <el-dropdown-item command="MyHome">我的主页</el-dropdown-item>
             <el-dropdown-item command="logout" divided>退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
@@ -65,13 +65,18 @@
     methods: {
       handleCommand(command){
         let _this = this;
+        if(command === 'systemMessage'){
+          _this.$router.replace({path: 'systemMessage'});
+        }
+        if(command === 'personalInfo'){
+          _this.$router.replace({path: 'personalInfo'});
+        }
         if (command === 'logout') {
           this.$confirm('注销登录吗?', '提示', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
             type: 'warning'
           }).then(function () {
-            getRequest("/logout")
             _this.currentUserName = '游客';
             _this.$router.replace({path: '/'});
           }, function () {
@@ -125,7 +130,7 @@
         currentUserName: '',
         email: sessionStorage.getItem('email')
       }
-    }
+    },
   }
 </script>
 <style>
