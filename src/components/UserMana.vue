@@ -84,7 +84,11 @@
         }).then(resp=>{
           if (resp.data.code === 0) {
             _this.$alert("操作成功");
-          }else {
+          }else if(resp.data.code !== -1 ) {
+            _this.$message({type: 'error', message: resp.data.msg});
+          }
+          else
+          {
             _this.$message({type: 'error', message: '操作失败!'});
           }
         });
@@ -97,7 +101,10 @@
         }).then(resp=>{
           if (resp.data.code === 0){
             _this.$alert("操作成功");
-          } else{
+          } else if(resp.data.code !== -1){
+            _this.$message({type: 'error', message: resp.data.msg});
+          }
+          else{
             _this.$message({type: 'error', message: '操作失败!'});
           }
         });
@@ -115,6 +122,11 @@
             //这里返回格式不一样了
             if (resp.data.code === 0) {
               _this.users = resp.data.data;
+              if (resp.data.data.length === 0){
+                _this.$message({type: 'error', message: '无匹配结果!'});
+              }
+              _this.total = resp.data.data.length;
+
 
             } else {
               _this.$message({type: 'error', message: '数据加载失败!'});
@@ -131,8 +143,16 @@
             email: email,
           }).then(resp => {
             if (resp.data.code === 0) {
-              _this.users = {};
-              _this.users[0] = resp.data.data;
+              if (resp.data.data.email!==null){
+                _this.users = {};
+                _this.users[0] = resp.data.data;
+                _this.total = 1;
+              } else{
+                _this.users = {};
+                _this.total = 0;
+                _this.$message({type: 'error', message: '无匹配结果!'});
+              }
+
             } else {
               _this.$message({type: 'error', message: '数据加载失败!'});
             }
@@ -165,7 +185,7 @@
         loading: false,
         users: [],
         pageNum: 1,
-        pageSize: 4,
+        pageSize: 6,
         pages: -1,
         total: 0,
         // allRoles: [],
