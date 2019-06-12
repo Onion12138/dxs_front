@@ -1,6 +1,6 @@
 <template>
-  <el-container class="home_container">
-    <el-header>
+  <el-container class="home_container" >
+    <el-header style="background-color: black">
       <div class="home_title">大学仕</div>
       <div class="home_userinfoContainer">
         <el-dropdown @command="handleCommand">
@@ -13,7 +13,7 @@
               <el-badge :is-dot="true"/>
             </el-dropdown-item>
             <el-dropdown-item command="personalInfo">个人信息</el-dropdown-item>
-            <el-dropdown-item command="MyHome">我的主页</el-dropdown-item>
+            <el-dropdown-item command="profile">我的主页</el-dropdown-item>
             <el-dropdown-item command="logout" divided>退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
@@ -70,6 +70,9 @@
         }
         if(command === 'personalInfo'){
           _this.$router.replace({path: 'personalInfo'});
+        }
+        if(command === 'profile'){
+          _this.$router.replace({path: 'profile'});
         }
         if (command === 'logout') {
           this.$confirm('注销登录吗?', '提示', {

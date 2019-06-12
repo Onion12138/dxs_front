@@ -15,6 +15,7 @@ import RingChart from '@/components/RingChart'
 import MultiChart from '@/components/MultiChart'
 import PieChart from '@/components/PieChart'
 import PersonalInfo from '@/components/PersonalInfo'
+import Profile from '@/components/Profile'
 import InfoDetail from "../components/InfoDetail";
 import GraduateInfoDetail from "../components/GraduateInfoDetail";
 import Test from "@/components/Test"
@@ -89,6 +90,11 @@ export default new Router({
           path: '/personalInfo',
           name: '个人信息',
           component: PersonalInfo,
+          hidden: true
+        },{
+          path: '/profile',
+          name: '我的主页',
+          component: Profile,
           hidden: true
         },
       ]
