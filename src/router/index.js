@@ -19,6 +19,8 @@ import InfoDetail from "../components/InfoDetail";
 import GraduateInfoDetail from "../components/GraduateInfoDetail";
 import Test from "@/components/Test"
 import SystemMessage from "@/components/SystemMessage"
+import CompanyList from "../components/CompanyList";
+import Interview from "../components/Interview";
 Vue.use(Router)
 
 export default new Router({
@@ -83,14 +85,6 @@ export default new Router({
             keepAlive: false
           }
         },
-        // {
-        //   path: '/info',
-        //   name: '个人信息',
-        //   component: InfoDetail,
-        //   mata: {
-        //     keepAlive: false
-        //   }
-        // },
         {
           path: '/personalInfo',
           name: '个人信息',
@@ -162,13 +156,23 @@ export default new Router({
     }, {
       path: '/home',
       component: Home,
-      name: '专业详情',
+      name: '专业就业',
+      iconCls: 'fa fa-reorder',
       children: [
         {
-          path: '/cateMana',
+          path: '/companyList',
           iconCls: 'fa fa-reorder',
-          name: '专业详情',
-          component: CateMana
+          name: '热门公司',
+          component: CompanyList
+        },
+        {
+          path: '/interview',
+          name: '面试经验',
+          component: Interview,
+          hidden: true,
+          meta: {
+            keepAlive: false
+          }
         }
       ]
     }, {
