@@ -14,9 +14,10 @@ import RingChart from '@/components/RingChart'
 import MultiChart from '@/components/MultiChart'
 import PieChart from '@/components/PieChart'
 import PersonalInfo from '@/components/PersonalInfo'
+import InfoDetail from '@/components/InfoDetail'
 import Profile from '@/components/Profile'
+import Begin from '@/components/Begin'
 import OtherProfile from '@/components/OtherProfile'
-import InfoDetail from "../components/InfoDetail";
 import GraduateInfoDetail from "../components/GraduateInfoDetail";
 import SystemMessage from "@/components/SystemMessage"
 import CompanyList from "../components/CompanyList";
@@ -52,8 +53,8 @@ export default new Router({
     {
       path: '/',
       name: '登录',
-      hidden: true,
-      component: Login
+      component: Login,
+      hidden: true
     }, {
       path: '/home',
       name: '',
@@ -72,6 +73,12 @@ export default new Router({
           meta: {
             keepAlive: false
           }
+        },
+        {
+          path: '/begin',
+          name: '开始页',
+          component: Begin,
+          hidden: true
         },
         {
           path: '/personalInfo',

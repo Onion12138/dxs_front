@@ -15,7 +15,7 @@
       <el-card style="width:330px;margin-top: 10px;" v-for="(user,index) in users" :key="index"
                v-loading="loading" >
         <div slot="header" style="text-align: left" @click="goToProfile(user.email)">
-          <span>{{user.nickname}}</span>
+          <span style="background-color: bisque" ><a href="#">{{user.nickname}}</a></span>
           <!--<el-button style="float: right; padding: 3px 0;color: #ff0509" type="text" icon="el-icon-delete"
                      @click="deleteUser(user.id)">删除
           </el-button>-->

@@ -47,7 +47,7 @@
       <el-container>
         <el-main>
           <el-breadcrumb separator-class="el-icon-arrow-right">
-            <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
+            <el-breadcrumb-item :to="{ path: '/begin' }">首页</el-breadcrumb-item>
             <el-breadcrumb-item v-text="this.$router.currentRoute.name"></el-breadcrumb-item>
           </el-breadcrumb>
           <keep-alive>
@@ -57,7 +57,9 @@
         </el-main>
       </el-container>
     </el-container>
+    <div>dxs@2019</div>
   </el-container>
+
 </template>
 <script>
   import {getRequest} from '../utils/api'
@@ -123,6 +125,7 @@
       this.$alert(sessionStorage.getItem('nickname') + '欢迎您', '友情提示', {
         confirmButtonText: '确定',
         callback: action => {
+          this.$router.push({path: '/begin'});
         }
       });
       let _this = this;
