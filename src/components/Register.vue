@@ -29,20 +29,20 @@
       <el-button type="primary" @click="submitForm('registerForm')" style="width: 70%">注册</el-button>
     </el-form-item>
 
-    <el-dialog title="注册成功，请选择身份类型，进行认证" :visible.sync="dialogFormVisible" width="40%">
-      <el-form :model="identity" label-position="right">
-        <el-form-item label="身份类型" :label-width="formLabelWidth">
-          <el-select v-model="identity.status" placeholder="请选择身份类型" style="float:left">
-            <el-option label="在校学生" value="0"></el-option>
-            <el-option label="毕业学生" value="1"></el-option>
-          </el-select>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="statusTest(identity.status)">确 定</el-button>
-      </div>
-    </el-dialog>
+<!--    <el-dialog title="注册成功，请选择身份类型，进行认证" :visible.sync="dialogFormVisible" width="40%">-->
+<!--      <el-form :model="identity" label-position="right">-->
+<!--        <el-form-item label="身份类型" :label-width="formLabelWidth">-->
+<!--          <el-select v-model="identity.status" placeholder="请选择身份类型" style="float:left">-->
+<!--            <el-option label="在校学生" value="0"></el-option>-->
+<!--            <el-option label="毕业学生" value="1"></el-option>-->
+<!--          </el-select>-->
+<!--        </el-form-item>-->
+<!--      </el-form>-->
+<!--      <div slot="footer" class="dialog-footer">-->
+<!--        <el-button @click="dialogFormVisible = false">取 消</el-button>-->
+<!--        <el-button type="primary" @click="statusTest(identity.status)">确 定</el-button>-->
+<!--      </div>-->
+<!--    </el-dialog>-->
 
   </el-form>
 </template>
@@ -79,9 +79,9 @@
           checkPassword: '',
           code: ''
         },
-        identity:{
-          status: ''   //0表示在校，1表示毕业
-        },
+        // identity:{
+        //   status: ''   //0表示在校，1表示毕业
+        // },
         rules: {
           email: [{required: true, message: '请输入邮箱', trigger: 'blur'},
             {type: 'email', message: '请输入合法邮箱', trigger: 'blur'}],
@@ -102,21 +102,21 @@
         msg: '发送验证码',
         timer: null,
         count: '',
-        dialogFormVisible: false,
-        formLabelWidth: '80px'
+        // dialogFormVisible: false,
+        // formLabelWidth: '80px'
       }
     },
     methods: {
-      statusTest(status){
-        let _this=this;
-        console.log(status);
-        if(status === 0){
-          _this.$router.replace({path: '/info'});
-          _this.dialogFormVisible = false;
-        }else if(status === 1){
-          _this.$router.replace({path: '/graduateInfo'});
-        }
-      },
+      // statusTest(status){
+      //   let _this=this;
+      //   console.log(status);
+      //   if(status === 0){
+      //     _this.$router.replace({path: '/info'});
+      //     _this.dialogFormVisible = false;
+      //   }else if(status === 1){
+      //     _this.$router.replace({path: '/graduateInfo'});
+      //   }
+      // },
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
@@ -129,7 +129,9 @@
             ).then(resp => {
               if (resp.data.code === 0) {
                 _this.$message({message: '注册成功', type: 'success'});
-                _this.dialogFormVisible = true;
+                // _this.dialogFormVisible = true;
+                _this.$router.replace({path: '/'});
+                //replace和push有啥区别呢
               } else {
                 _this.$alert(resp.data.msg);
               }

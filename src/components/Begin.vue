@@ -1,8 +1,8 @@
 <template>
 
   <div class="app-container">
-    <h4 style="text-align: center">To Begin !</h4>
-    <img src="https://mpy634.cn/img/ecnu.jpg" alt="ECNU">
+    <h6 style="text-align: center">To Begin !</h6>
+    <img src="https://mpy634.cn/img/ecnu.jpg" alt="ECNU" width="100%">
     <h4 style="alignment-baseline: baseline ; text-align: left" >仓库地址：</h4>
     <div style="display: flex;justify-content: space-around;flex-wrap: wrap">
   <el-card style="width:444px;margin-top: 10px; background-color: bisque">
@@ -20,5 +20,9 @@
   </div>
   </div>
 </template>
+<script>
+
+
+</script>
 
 

@@ -43,9 +43,25 @@
       <el-link href="/#/reset" icon="el-icon-milk-tea" type="primary" style="font-size: large">忘记密码？重置</el-link>
     </el-form-item>
 
+    <el-dialog title="请选择身份类型，进行认证" :visible.sync="dialogFormVisible" width="40%">
+      <el-form :model="identity" label-position="right">
+        <el-form-item label="身份类型" :label-width="formLabelWidth">
+          <el-select v-model="identity.status" placeholder="请选择身份类型" style="float:left">
+            <el-option label="在校学生" value="0"></el-option>
+            <el-option label="毕业学生" value="1"></el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="statusTest(identity.status)">确 定</el-button>
+      </div>
+    </el-dialog>
+
   </el-form>
 
   </el-row>
+
 </template>
 <script>
   import {postRequest} from '../utils/api'
@@ -53,6 +69,9 @@
   export default{
     data(){
       return {
+        identity:{
+          status: ''   //0表示在校，1表示毕业
+        },
         rules: {
           email: [{required: true, message: '请输入邮箱', trigger: 'blur'},
             {type: 'email', message: '请输入正确邮箱', trigger: 'blur'}],
@@ -67,9 +86,21 @@
         loading: false,
         dataimg: [
         ],
+        dialogFormVisible: false,
+        formLabelWidth: '80px',
       }
     },
     methods: {
+      statusTest(status){
+        let _this=this;
+        // console.log(status);
+        if(status === '0'){
+          _this.$router.replace({path: '/info'});
+          _this.dialogFormVisible = false;
+        }else if(status === 1){
+          _this.$router.replace({path: '/graduateInfo'});
+        }
+      },
       submitClick: function (formName) {
         this.$refs[formName].validate((valid)=>{
           if(valid){
@@ -85,9 +116,16 @@
                 sessionStorage.setItem("email",resp.data.data.email);
                 sessionStorage.setItem("universityName",resp.data.data.universityName);
                 sessionStorage.setItem("majorName",resp.data.data.majorName);
-                sessionStorage.setItem("role",resp.data.data.role);
+                // sessionStorage.setItem("majorName",resp.data.data.role);
                 if(resp.data.code === 0){
-                  _this.$router.replace({path: '/home'});
+                  if (resp.data.data.role === 'undefined'){
+                    // _this.$alert("请先完成认证");
+                    _this.dialogFormVisible = true;
+                    // _this.$router.replace({path: '/info'});
+                  }
+                  else {
+                    _this.$router.replace({path: '/home'});
+                  }
                 }else{
                   _this.$alert(resp.data.msg);
                 }
