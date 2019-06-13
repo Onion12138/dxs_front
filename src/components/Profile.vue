@@ -101,42 +101,22 @@
       //   _this.loadInterview();
       // });
       _this.loadProfile();
+      _this.loadMoreData();
     },
     name: "Profile",
     data: function () {
       return {
-        email: sessionStorage.getItem("email"),
-        nickname: sessionStorage.getItem("nickname"),
-        universityName: sessionStorage.getItem("universityName"),
-        majorName: sessionStorage.getItem("majorName"),
-        role: sessionStorage.getItem("role"),
-        followedNum: 2,
-        followingNum: 3,
+        email: '',
+        nickname: '',
+        universityName: '未知',
+        majorName: '未知',
+        role: '未认证用户',
+        followedNum: 0,
+        followingNum: 0,
         feeling: "心情简单",
         activeTab: 'article',
         loading: true,
-        postArticles: [
-          {
-            publishTime: '2019/4/20',
-            title: '修仙',
-            content: '呜呜呜呜呜呜呜呜'
-          },
-          {
-            publishTime: '2019/4/21',
-            title: '一男子竟然。。。',
-            content: '了解了坎坎坷坷'
-          },
-          {
-            publishTime: '2019/4/22',
-            title: '在机场当众',
-            content: '我 i 了佛教认为'
-          },
-          {
-            publishTime: '2019/4/23',
-            title: '作出这种事',
-            content: '喔呃我问老虎'
-          },
-        ],
+        postArticles: [],
         total: 0,
       }
     },
@@ -152,9 +132,9 @@
           }).then(resp=>{
             if (resp.data.code === 0){
               _this.postArticles = {};
-              _this.postArticles = resp.data.data.list;
+              _this.postArticles = resp.data.data.content;
             }else{
-              _this.$alert("数据错误");
+              // _this.$alert("数据错误");
             }
           })
         }
@@ -166,24 +146,31 @@
       },
       loadProfile: function () {
         let _this = this;
-
-        getRequest("/user",{
+       _this.email = this.$route.query.email;
+       if (_this.email === '' || _this.email === undefined){
+         _this.email = sessionStorage.getItem("email");
+       }
+       getRequest("/user",{
           email: _this.email,
-          role: _this.role,
+          // role: _this.role,
         })
           .then(resp=>{
             if(resp.data.code === 0){
-              _this.followingNum = resp.data.data.followingNum;
-              _this.followedNum = resp.data.data.followedNum;
+              // _this.followingNum = resp.data.data.followingNum;
+              // _this.followedNum = resp.data.data.followedNum;
+              _this.universityName = resp.data.data.universityName;
+              _this.nickname = resp.data.data.nickname;
+              _this.majorName = resp.data.data.majorName;
+              _this.role = resp.data.data.role;
             }else{
-              _this.$alert("数据错误");
+              _this.$message({type: 'error', message: '信息加载失败!'});
             }
           });
-        if (_this.universityName === null){
-          _this.universityName = '未知';
-          _this.majorName = '未知';
-          _this.role = '未认证用户';
-        }
+        // if (_this.universityName === null){
+        //   _this.universityName = '未知';
+        //   _this.majorName = '未知';
+        //   _this.role = '未认证用户';
+        // }
       }
     }
   }
