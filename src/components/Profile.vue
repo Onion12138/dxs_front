@@ -66,19 +66,51 @@
             <el-tabs v-model="activeTab" @click.native="loadMoreData">
               <el-tab-pane label="发布的文章" name="article">
                 <el-timeline>
-                  <el-timeline-item v-for="(item,index) of postArticles" :key="index" :timestamp="item.publishTime" placement="top">
+                  <el-timeline-item v-for="(item,index) of postArticles" :key="index" :timestamp="item.publishTime | formatDateTime" placement="top">
                     <el-card>
                       <h4>{{ item.title }}</h4>
-                      <p>{{ item.content }}</p>
+                      <div v-html="item.htmlContent"></div>
                     </el-card>
                   </el-timeline-item>
                 </el-timeline>
               </el-tab-pane>
               <el-tab-pane label="关注我的" name="followed" >
+                <el-table
+                  :data="followedList"
+                  style="width: 100%">
+                  <el-table-column
+                    prop="followingEmail"
+                    label="邮箱"
+                    width="180">
+                  </el-table-column>
+                  <el-table-column
+                    label="操作"
+                    width="180">
+                    <template slot-scope="scope">
+                    <el-button type="success" @click="jumpToProfile(scope.row.followingEmail)">查看主页</el-button>
+                    </template>
+                  </el-table-column>
+                </el-table>
 
               </el-tab-pane>
               <el-tab-pane label="我关注的" name="following" >
-
+                <el-table
+                  :data="followingList"
+                  style="width: 100%">
+                  <el-table-column
+                    prop="followedEmail"
+                    label="邮箱"
+                    width="180">
+                  </el-table-column>
+                  <el-table-column
+                    label="操作"
+                    width="300">
+                    <template slot-scope="scope">
+                    <el-button type="success" @click="jumpToProfile(scope.row.followedEmail)">查看主页</el-button>
+                    <el-button type="danger" @click="cancelFollow(scope.row.followedEmail)">取消关注</el-button>
+                    </template>
+                  </el-table-column>
+                </el-table>
               </el-tab-pane>
             </el-tabs>
           </el-card>
@@ -101,6 +133,7 @@
       //   _this.loadInterview();
       // });
       _this.loadProfile();
+      _this.loadMoreData();
     },
     name: "Profile",
     data: function () {
@@ -115,54 +148,61 @@
         feeling: "心情简单",
         activeTab: 'article',
         loading: true,
-        postArticles: [
-          {
-            publishTime: '2019/4/20',
-            title: '修仙',
-            content: '呜呜呜呜呜呜呜呜'
-          },
-          {
-            publishTime: '2019/4/21',
-            title: '一男子竟然。。。',
-            content: '了解了坎坎坷坷'
-          },
-          {
-            publishTime: '2019/4/22',
-            title: '在机场当众',
-            content: '我 i 了佛教认为'
-          },
-          {
-            publishTime: '2019/4/23',
-            title: '作出这种事',
-            content: '喔呃我问老虎'
-          },
-        ],
+        postArticles: [],
         total: 0,
+        followedList: [],
+        followingList: [],
+        page: 1,
+        pageSize: 50,
+
       }
     },
     methods:{
+      jumpToProfile: function(email){
+        this.$router.push({path: "/profile",query:{email: email}});
+      },
+      cancelFollow: function(followedEmail){
+        let _this = this;
+        deleteRequest("/follow/cancelFollow",
+          {followingEmail: _this.followingNum,
+          followedEmail: followedEmail
+          }).then(resp=>{
+            if(resp.data.code === 0){
+              _this.$alert("操作成功");
+            }else {
+              _this.$alert("操作失败");
+            }
+        })
+      },
       loadMoreData: function(){
         let _this = this;
         // _this.$alert("那是真的牛皮!"+ _this.activeTab);
-        if (_this.activeTab === 'article'){
-          getRequest("/discussion/mine",+{
+          getRequest("/discussion/mine",{
             page: 1,
             size: 100,//只展示最近一百条
             email: _this.email,
           }).then(resp=>{
             if (resp.data.code === 0){
-              _this.postArticles = {};
-              _this.postArticles = resp.data.data.list;
+              // _this.postArticles = {};
+              _this.postArticles = resp.data.data.content;
             }else{
               _this.$alert("数据错误");
             }
-          })
-        }
-        else if (_this.activeTab === 'followed'){
-
-        } else{
-
-        }
+          });
+          getRequest("/follow/getInfo",{
+            email: _this.email,
+            page: _this.page,
+            size: _this.pageSize
+          }).then(resp=>{
+              if(resp.data.code === 0){
+                _this.followingNum = resp.data.data.followingNum;
+                _this.followedNum = resp.data.data.followedNum;
+                _this.followingList = resp.data.data.following.list;
+                _this.followedList = resp.data.data.followed.list;
+              }else{
+                _this.$alert("数据错误");
+              }
+            })
       },
       loadProfile: function () {
         let _this = this;
