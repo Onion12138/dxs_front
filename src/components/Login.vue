@@ -1,4 +1,19 @@
 <template>
+<!--  <el-row :gutter="0">-->
+<!--    <el-carousel :interval="0" arrow="never" height="500px" type="card">-->
+<!--      <el-carousel-item v-for="item in dataimg" :key="item">-->
+<!--        <div class="grid-content">-->
+<!--          <el-col :md="12" :offset="6">-->
+<!--            <div>-->
+<!--              <img :src="item.src">-->
+<!--              <p class="italictext">{{item.txt}}</p>-->
+<!--              <span class="service">{{item.txt2}}</span>-->
+<!--              <p class="last">{{item.txt3}}</p>-->
+<!--            </div>-->
+<!--          </el-col>-->
+<!--        </div>-->
+<!--      </el-carousel-item>-->
+<!--    </el-carousel>-->
   <el-form :model="loginForm" :rules="rules" class="login-container" ref="loginForm" label-position="left"
            label-width="0px" v-loading="loading">
     <h3 class="login_title">系统登录</h3>
@@ -26,6 +41,7 @@
     </el-form-item>
 
   </el-form>
+<!--  </el-row>-->
 </template>
 <script>
   import {postRequest} from '../utils/api'
@@ -44,7 +60,26 @@
           username: '',
           password: ''
         },
-        loading: false
+        loading: false,
+        dataimg: [{
+          src: require('../assets/background1.png'),
+          txt: '"Sed semper lorem at felis. Vestibulum volutpat, lacus a ultrices sagittis, mi neque euismod dui, eu pulvinar nunc sapien ornare nisl. Phasellus pede arcu, dapibus eu, fermentum et, dapibus sed, urna."',
+          txt2: '一站式服务',
+          txt3: 'Miami, FL'
+        },
+          {
+            src: require('../assets/background2.png'),
+            txt: '"Sed egestas, ante et vulputate volutpat, eros pede semper est, vitae luctus metus libero eu augue. Morbi purus libero, faucibus adipiscing, commodo quis, gravida id, est. Sed lectus. Praesent elementum hendrerit tortor."',
+            txt2: '国际服务',
+            txt3: 'Greensboro, NC'
+          },
+          {
+            src: require('../assets/background3.png'),
+            txt: '"Praesent elementum hendrerit tortor. Sed semper lorem at felis. Vestibulum volutpat, lacus a ultrices sagittis eu pulvinar nunc sapien ornare nisl. Phasellus pede arcu, dapibus eu, fermentum et, dapibus sed, urna."',
+            txt2: '全网渠道',
+            txt3: 'Charlotte, NC'
+          }
+        ],
       }
     },
     methods: {
