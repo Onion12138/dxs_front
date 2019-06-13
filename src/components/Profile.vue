@@ -74,10 +74,10 @@
                   </el-timeline-item>
                 </el-timeline>
               </el-tab-pane>
-              <el-tab-pane label="关注他的" name="followed" >
+              <el-tab-pane label="关注我的" name="followed" >
 
               </el-tab-pane>
-              <el-tab-pane label="他关注的" name="following" >
+              <el-tab-pane label="我关注的" name="following" >
 
               </el-tab-pane>
             </el-tabs>
@@ -91,7 +91,6 @@
 
 
 <script>
-  import { mapGetters } from 'vuex'
 
   import {getRequest, postRequest, putRequest, deleteRequest} from "../utils/api";
 
@@ -168,7 +167,10 @@
       loadProfile: function () {
         let _this = this;
 
-        getRequest("/",{email: _this.email})
+        getRequest("/user",{
+          email: _this.email,
+          role: _this.role,
+        })
           .then(resp=>{
             if(resp.data.code === 0){
               _this.followingNum = resp.data.data.followingNum;
@@ -176,7 +178,12 @@
             }else{
               _this.$alert("数据错误");
             }
-          })
+          });
+        if (_this.universityName === null){
+          _this.universityName = '未知';
+          _this.majorName = '未知';
+          _this.role = '未认证用户';
+        }
       }
     }
   }
