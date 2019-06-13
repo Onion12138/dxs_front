@@ -63,28 +63,26 @@
 
         <el-col :span="18" :xs="24">
           <el-card>
-            <el-tabs v-model="loading" @click.native="loadMoreData">
-
-              <el-tab-pane label="发布的文章" name="articles">
-                  <el-timeline>
-                    <el-timeline-item v-for="(item,index) of postArticles" :key="index" :timestamp="item.timestamp" placement="top">
-                      <el-card>
-                        <h4>{{ item.title }}</h4>
-                        <p>{{ item.content }}</p>
-                      </el-card>
-                    </el-timeline-item>
-                  </el-timeline>
+            <el-tabs v-model="activeTab" @click.native="loadMoreData">
+              <el-tab-pane label="发布的文章" name="article">
+                <el-timeline>
+                  <el-timeline-item v-for="(item,index) of postArticles" :key="index" :timestamp="item.publishTime" placement="top">
+                    <el-card>
+                      <h4>{{ item.title }}</h4>
+                      <p>{{ item.content }}</p>
+                    </el-card>
+                  </el-timeline-item>
+                </el-timeline>
               </el-tab-pane>
-              <el-tab-pane label="关注他的" name="关注他的" >
+              <el-tab-pane label="关注他的" name="followed" >
 
               </el-tab-pane>
-              <el-tab-pane label="他关注的" name="他关注的" >
+              <el-tab-pane label="他关注的" name="following" >
 
               </el-tab-pane>
             </el-tabs>
           </el-card>
         </el-col>
-
 
       </el-row>
     </div>
@@ -94,6 +92,7 @@
 
 <script>
   import { mapGetters } from 'vuex'
+
   import {getRequest, postRequest, putRequest, deleteRequest} from "../utils/api";
 
   export default {
@@ -107,48 +106,69 @@
     name: "Profile",
     data: function () {
       return {
+        email: sessionStorage.getItem("email"),
         nickname: sessionStorage.getItem("nickname"),
         universityName: sessionStorage.getItem("universityName"),
         majorName: sessionStorage.getItem("majorName"),
         role: sessionStorage.getItem("role"),
-        followedNum: 0,
-        followingNum: 0,
+        followedNum: 2,
+        followingNum: 3,
         feeling: "心情简单",
+        activeTab: 'article',
         loading: true,
-        total: 0,
         postArticles: [
           {
-            timestamp: '2019/4/20',
+            publishTime: '2019/4/20',
             title: '修仙',
             content: '呜呜呜呜呜呜呜呜'
           },
           {
-            timestamp: '2019/4/21',
+            publishTime: '2019/4/21',
             title: '一男子竟然。。。',
             content: '了解了坎坎坷坷'
           },
           {
-            timestamp: '2019/4/22',
+            publishTime: '2019/4/22',
             title: '在机场当众',
             content: '我 i 了佛教认为'
           },
           {
-            timestamp: '2019/4/23',
+            publishTime: '2019/4/23',
             title: '作出这种事',
             content: '喔呃我问老虎'
           },
         ],
+        total: 0,
       }
     },
     methods:{
       loadMoreData: function(){
         let _this = this;
-        // _this.$alert("那是真的牛皮!");
+        // _this.$alert("那是真的牛皮!"+ _this.activeTab);
+        if (_this.activeTab === 'article'){
+          getRequest("/discussion/mine",+{
+            page: 1,
+            size: 100,//只展示最近一百条
+            email: _this.email,
+          }).then(resp=>{
+            if (resp.data.code === 0){
+              _this.postArticles = {};
+              _this.postArticles = resp.data.data.list;
+            }else{
+              _this.$alert("数据错误");
+            }
+          })
+        }
+        else if (_this.activeTab === 'followed'){
+
+        } else{
+
+        }
       },
       loadProfile: function () {
         let _this = this;
 
-        getRequest("/",{email: sessionStorage.getItem("email")})
+        getRequest("/",{email: _this.email})
           .then(resp=>{
             if(resp.data.code === 0){
               _this.followingNum = resp.data.data.followingNum;
