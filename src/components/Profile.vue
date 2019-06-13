@@ -129,6 +129,9 @@
   export default {
     mounted: function(){
       let _this = this;
+      window.bus.$on("reload",function () {
+        _this.loadMoreData();
+      });
       _this.loadProfile();
       _this.loadMoreData();
     },
@@ -162,11 +165,13 @@
       cancelFollow: function(followedEmail){
         let _this = this;
         deleteRequest("/follow/cancelFollow",
-          {followingEmail: _this.followingNum,
+          {followingEmail: _this.email,
           followedEmail: followedEmail
           }).then(resp=>{
             if(resp.data.code === 0){
+              window.bus.$emit("reload");
               _this.$alert("操作成功");
+
             }else {
               _this.$alert("操作失败");
             }
