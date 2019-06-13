@@ -105,6 +105,11 @@ export default new Router({
           name: '毕业生信息认证',
           component: GraduateInfoDetail,
           hidden: true
+        },{
+          path: '/homeReset',
+          name: '重置密码',
+          component: Reset,
+          hidden: true
         }
 
       ]

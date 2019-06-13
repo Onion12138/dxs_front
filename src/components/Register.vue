@@ -1,40 +1,32 @@
 <template>
-  <el-form :model="registerForm" :rules="rules" ref="registerForm" class="login-container" label-position="left"
+  <el-form :model="registerForm" :rules="rules" ref="registerForm" class="register-container" label-position="left"
            label-width="20px" >
     <h3 class="login_title">注册</h3>
 
     <el-form-item prop="email">
-      <el-input type="text" v-model="registerForm.email" auto-complete="off" placeholder="邮箱"></el-input>
+      <el-input type="text" v-model="registerForm.email" auto-complete="off" placeholder="邮箱" style="width: 70%;margin-bottom: 40px"></el-input>
     </el-form-item>
 
     <el-form-item prop="nickname">
-      <el-input type="text" v-model="registerForm.nickname" auto-complete="off" placeholder="昵称"></el-input>
+      <el-input type="text" v-model="registerForm.nickname" auto-complete="off" placeholder="昵称" style="width: 70%;margin-bottom: 40px"></el-input>
     </el-form-item>
 
     <el-form-item prop="password">
-      <el-input type="password" v-model="registerForm.password" auto-complete="off" placeholder="密码"></el-input>
+      <el-input type="password" v-model="registerForm.password" auto-complete="off" placeholder="密码" style="width: 70%;margin-bottom: 40px"></el-input>
     </el-form-item>
 
     <el-form-item prop="checkPassword">
-      <el-input type="password" v-model="registerForm.checkPassword" auto-complete="off" placeholder="确认密码"></el-input>
+      <el-input type="password" v-model="registerForm.checkPassword" auto-complete="off" placeholder="确认密码" style="width: 70%;margin-bottom: 40px"></el-input>
     </el-form-item>
 
-    <el-row>
-    <el-col :span="12">
     <el-form-item prop="code">
-      <el-input type="text" v-model="registerForm.code" auto-complete="off" placeholder="验证码"></el-input>
+      <el-input type="text" placeholder="验证码" v-model="registerForm.code" style="width: 70%;margin-bottom: 40px">
+        <el-button slot="append" icon="el-icon-s-promotion" @click="sendCode('registerForm')" :disabled="this.timer != null">{{msg}}</el-button>
+      </el-input>
     </el-form-item>
-    </el-col>
 
-    <el-col :span="12">
-    <el-form-item style="width: 100%">
-      <el-button @click.native.prevent="sendCode('registerForm')" :disabled="this.timer != null">{{msg}}</el-button>
-    </el-form-item>
-    </el-col>
-    </el-row>
-
-    <el-form-item style="width: 100%">
-      <el-button type="primary" @click="submitForm('registerForm')" style="width: 100%">注册</el-button>
+    <el-form-item>
+      <el-button type="primary" @click="submitForm('registerForm')" style="width: 70%">注册</el-button>
     </el-form-item>
 
     <el-dialog title="注册成功，请选择身份类型，进行认证" :visible.sync="dialogFormVisible" width="40%">
@@ -153,7 +145,7 @@
       sendCode: function (formName) {
         this.$refs[formName].validateField('email',msg =>{
           if(msg === ""){
-            this.count = 60;
+            this.count = 30;
             this.timer = setInterval(() => {
               if (this.count > 0) {
                 this.count--;
@@ -186,15 +178,17 @@
 </script>
 
 <style scoped>
-  .login-container {
+  .register-container {
     border-radius: 15px;
     background-clip: padding-box;
     margin: 180px auto;
-    width: 350px;
+    width: 640px;
+    height: 640px;
     padding: 35px 35px 15px 35px;
     background: #fff;
     border: 1px solid #eaeaea;
     box-shadow: 0 0 25px #cac6c6;
+    background-image: url("../assets/register.png");
   }
 
   .login_title {

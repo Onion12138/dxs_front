@@ -1,5 +1,6 @@
 <template>
-<!--  <el-row :gutter="0">-->
+  <el-row :gutter="0">
+<!--    <el-col>-->
 <!--    <el-carousel :interval="0" arrow="never" height="500px" type="card">-->
 <!--      <el-carousel-item v-for="item in dataimg" :key="item">-->
 <!--        <div class="grid-content">-->
@@ -14,34 +15,37 @@
 <!--        </div>-->
 <!--      </el-carousel-item>-->
 <!--    </el-carousel>-->
+<!--    </el-col>-->
+<!--    <el-col>-->
   <el-form :model="loginForm" :rules="rules" class="login-container" ref="loginForm" label-position="left"
            label-width="0px" v-loading="loading">
     <h3 class="login_title">系统登录</h3>
 
-    <el-form-item  prop="email">
+    <el-form-item  prop="email" style="margin-bottom: 80px">
       <el-input type="text" v-model="loginForm.email" auto-complete="off" placeholder="邮箱"></el-input>
     </el-form-item>
 
-    <el-form-item prop="password">
+    <el-form-item prop="password" style="margin-bottom: 80px">
       <el-input type="password" v-model="loginForm.password" auto-complete="off" placeholder="密码"></el-input>
     </el-form-item>
 
-    <el-checkbox class="login_remember" v-model="checked" label-position="left">记住密码</el-checkbox>
+<!--    <el-checkbox class="login_remember" v-model="checked" label-position="left">记住密码</el-checkbox>-->
 
-    <el-form-item style="width: 100%">
-      <el-button type="primary" @click.native.prevent="submitClick('loginForm')" style="width: 100%">登录</el-button>
+    <el-form-item style="width: 100% ;margin-bottom: 80px">
+      <el-button type="success" @click.native.prevent="submitClick('loginForm')" style="width: 100%">登录</el-button>
     </el-form-item>
 
     <el-form-item>
-    <router-link to="/register" class="linkregister">没有账号？注册</router-link>
+      <el-link href="/#/register" icon="el-icon-lollipop" type="primary" style="font-size: large">没有账号？注册</el-link>
     </el-form-item>
 
     <el-form-item>
-    <router-link to="/reset" class="linkreset">忘记密码？重置</router-link>
+      <el-link href="/#/reset" icon="el-icon-milk-tea" type="primary" style="font-size: large">忘记密码？重置</el-link>
     </el-form-item>
 
   </el-form>
-<!--  </el-row>-->
+
+  </el-row>
 </template>
 <script>
   import {postRequest} from '../utils/api'
@@ -61,24 +65,7 @@
           password: ''
         },
         loading: false,
-        dataimg: [{
-          src: require('../assets/background1.png'),
-          txt: '"Sed semper lorem at felis. Vestibulum volutpat, lacus a ultrices sagittis, mi neque euismod dui, eu pulvinar nunc sapien ornare nisl. Phasellus pede arcu, dapibus eu, fermentum et, dapibus sed, urna."',
-          txt2: '一站式服务',
-          txt3: 'Miami, FL'
-        },
-          {
-            src: require('../assets/background2.png'),
-            txt: '"Sed egestas, ante et vulputate volutpat, eros pede semper est, vitae luctus metus libero eu augue. Morbi purus libero, faucibus adipiscing, commodo quis, gravida id, est. Sed lectus. Praesent elementum hendrerit tortor."',
-            txt2: '国际服务',
-            txt3: 'Greensboro, NC'
-          },
-          {
-            src: require('../assets/background3.png'),
-            txt: '"Praesent elementum hendrerit tortor. Sed semper lorem at felis. Vestibulum volutpat, lacus a ultrices sagittis eu pulvinar nunc sapien ornare nisl. Phasellus pede arcu, dapibus eu, fermentum et, dapibus sed, urna."',
-            txt2: '全网渠道',
-            txt3: 'Charlotte, NC'
-          }
+        dataimg: [
         ],
       }
     },
@@ -123,11 +110,14 @@
     border-radius: 15px;
     background-clip: padding-box;
     margin: 180px auto;
-    width: 350px;
+    width: 500px;
+    height: 800px;
     padding: 35px 35px 15px 35px;
     background: #fff;
     border: 1px solid #eaeaea;
     box-shadow: 0 0 25px #cac6c6;
+    background-image: url("../assets/login.png");
+    background-size: contain;
   }
 
   .login_title {

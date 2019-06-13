@@ -32,7 +32,7 @@
       <el-link icon="el-icon-s-custom" href="/#/homeInfo" v-if="role==='student'">重新认证</el-link>
     </el-form-item>
     <el-form-item>
-    <el-link icon="el-icon-s-check" href="/#/reset">重置密码</el-link>
+    <el-link icon="el-icon-s-check" href="/#/homeReset">重置密码</el-link>
       </el-form-item>
 
 
