@@ -13,7 +13,7 @@
     </div>
     <div style="display: flex;justify-content: space-around;flex-wrap: wrap">
       <el-card style="width:330px;margin-top: 10px;" v-for="(user,index) in users" :key="index"
-               v-loading="loading">
+               v-loading="loading" @click.native="goToProfile(user.email)">
         <div slot="header" style="text-align: left">
           <span>{{user.nickname}}</span>
           <!--<el-button style="float: right; padding: 3px 0;color: #ff0509" type="text" icon="el-icon-delete"
@@ -92,6 +92,9 @@
             _this.$message({type: 'error', message: '操作失败!'});
           }
         });
+      },
+      goToProfile(email){
+        this.$router.push({path: '/profile', query: {email: email}});
       },
       unfollowUser(email) {
         let _this = this;
