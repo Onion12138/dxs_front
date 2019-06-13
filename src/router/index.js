@@ -44,6 +44,12 @@ export default new Router({
       component: Reset,
       hidden: true
     },
+    {
+      path: '/info',
+      name: "信息认证",
+      component: InfoDetail,
+      hidden: true
+    },
     // {
     //   path: '/personalInfo',
     //   name: '信息',
@@ -102,7 +108,18 @@ export default new Router({
           name: '他的主页',
           component: OtherProfile,
           hidden: true
-        },
+        },{
+          path: '/homeInfo',
+          name: '在校生信息认证',
+          component: InfoDetail,
+          hidden: true
+        },{
+          path: '/homeGraduateInfo',
+          name: '毕业生信息认证',
+          component: GraduateInfoDetail,
+          hidden: true
+        }
+
       ]
     },
     {

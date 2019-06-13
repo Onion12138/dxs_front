@@ -81,7 +81,7 @@
                   <el-table-column
                     prop="followingEmail"
                     label="邮箱"
-                    width="180">
+                    width="300">
                   </el-table-column>
                   <el-table-column
                     label="操作"
@@ -100,7 +100,7 @@
                   <el-table-column
                     prop="followedEmail"
                     label="邮箱"
-                    width="180">
+                    width="300">
                   </el-table-column>
                   <el-table-column
                     label="操作"

@@ -118,10 +118,10 @@
       statusTest(status){
         let _this=this;
         console.log(status);
-        if(status == 0){
+        if(status === 0){
           _this.$router.replace({path: '/info'});
           _this.dialogFormVisible = false;
-        }else if(status == 1){
+        }else if(status === 1){
           _this.$router.replace({path: '/graduateInfo'});
         }
       },

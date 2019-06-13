@@ -5,12 +5,9 @@
     <el-input v-model="email" :disabled="true"></el-input>
   </el-form-item>
     <el-form-item label="我的昵称">
-<!--    <el-form-item>-->
-    <el-input  v-model="nickname" ></el-input>
-    <!--    </el-form-item>-->
-    <!--    <el-form-item>-->
-    <el-button type="primary" @click="handleName">修改昵称</el-button>
-    <!--    </el-form-item>-->
+      <el-input placeholder="请输入内容" v-model="nickname" >
+        <el-button slot="append" icon="el-icon-edit" @click="handleName">修改昵称</el-button>
+      </el-input>
     </el-form-item>
     <el-form-item label="我的大学">
       <el-input v-model="university" :disabled="true" ></el-input>
@@ -27,15 +24,18 @@
     <el-form-item label="我的职位" v-if="role==='graduate'">
       <el-input v-model="position" :disabled="true" ></el-input>
     </el-form-item>
+
     <el-form-item>
-      <router-link to="/infoDetail" v-if="role==='student'">重新认证</router-link>
+    <el-link icon="el-icon-s-custom" href="/#/homeGraduateInfo" v-if="role==='graduate'">重新认证</el-link>
     </el-form-item>
     <el-form-item>
-      <router-link to="/graduateInfo" v-if="role==='graduate'">重新认证</router-link>
+      <el-link icon="el-icon-s-custom" href="/#/homeInfo" v-if="role==='student'">重新认证</el-link>
     </el-form-item>
     <el-form-item>
-      <router-link to="/reset">重置密码</router-link>
-    </el-form-item>
+    <el-link icon="el-icon-s-check" href="/#/reset">重置密码</el-link>
+      </el-form-item>
+
+
   </el-form>
 </template>
 <script>
@@ -52,7 +52,7 @@
           _this.university = resp.data.data.universityName;
           _this.major = resp.data.data.majorName;
           if(_this.role === 'graduate'){
-            _this.company = resp.data.data.companyName;
+            _this.company = resp.data.data.company;
             _this.graduateYear = resp.data.data.graduateYear;
             _this.position = resp.data.data.position;
           }
