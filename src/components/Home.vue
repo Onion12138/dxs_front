@@ -81,6 +81,7 @@
             type: 'warning'
           }).then(function () {
             _this.currentUserName = '游客';
+            sessionStorage.clear();
             _this.$router.replace({path: '/'});
           }, function () {
             //取消
@@ -179,5 +180,6 @@
   .home_userinfoContainer {
     display: inline;
     margin-right: 20px;
+    /*background-color: #fff;*/
   }
 </style>

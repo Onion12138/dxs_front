@@ -20,21 +20,8 @@
         <el-tab-pane label="我发布的" name="mine">
           <blog_table state="-3" :showEdit="false" :showDelete="true" :activeName="activeName"></blog_table>
         </el-tab-pane>
-<!--        <el-tab-pane label="博客配置" name="blogcfg">-->
-<!--          <blog_cfg></blog_cfg>-->
-<!--        </el-tab-pane>-->
       </el-tabs>
     </el-main>
-
-
-<!--    <el-footer>-->
-<!--    <div class="block">-->
-<!--      <el-pagination-->
-<!--        layout="prev, pager, next"-->
-<!--        :total="50">-->
-<!--      </el-pagination>-->
-<!--    </div>-->
-<!--    </el-footer>-->
 
 
   </el-container>
@@ -42,19 +29,9 @@
 </template>
 <script>
   import BlogTable from '@/components/BlogTable'
-  import BlogCfg from '@/components/BlogCfg'
-  import {postRequest} from '../utils/api'
-  import {putRequest} from '../utils/api'
-  import {deleteRequest} from '../utils/api'
-  import {getRequest} from '../utils/api'
   export default {
     mounted: function () {
-      // var _this = this;
-      // getRequest("/discussion/all",{majorName: sessionStorage.getItem("majorName")}).then(resp=> {
-      //   if (resp.data.code ===0) {
-      //     _this.$alert("成功");
-      //   }
-      // })
+
     },
     data() {
       return {
@@ -69,7 +46,6 @@
     },
     components: {
       'blog_table': BlogTable,
-      'blog_cfg': BlogCfg
     }
   };
 </script>
@@ -83,7 +59,6 @@
   }
 
   .article_list > .main {
-    /*justify-content: flex-start;*/
     display: flex;
     flex-direction: column;
     padding-left: 0px;

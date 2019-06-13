@@ -3,7 +3,6 @@ import Router from 'vue-router'
 import Login from '@/components/Login'
 import Home from '@/components/Home'
 import ArticleList from '@/components/ArticleList'
-import CateMana from '@/components/CateMana'
 import PostArticle from '@/components/PostArticle'
 import UserMana from '@/components/UserMana'
 import Peers from '@/components/Peers'
@@ -19,7 +18,6 @@ import Profile from '@/components/Profile'
 import OtherProfile from '@/components/OtherProfile'
 import InfoDetail from "../components/InfoDetail";
 import GraduateInfoDetail from "../components/GraduateInfoDetail";
-import Test from "@/components/Test"
 import SystemMessage from "@/components/SystemMessage"
 import CompanyList from "../components/CompanyList";
 import Interview from "../components/Interview";
@@ -27,11 +25,6 @@ Vue.use(Router)
 
 export default new Router({
   routes: [
-    {
-      path: '/test',
-      component: Test,
-      hidden: true
-    },
     {
       path: '/register',
       name: '注册',
@@ -50,19 +43,6 @@ export default new Router({
       component: InfoDetail,
       hidden: true
     },
-    // {
-    //   path: '/personalInfo',
-    //   name: '信息',
-    //   component: PersonalInfo,
-    //   hidden: true
-    // },
-    //add
-    // {
-    //   path: '/personalInfo',
-    //   name: '个人主页',
-    //   component: PersonalInfo,
-    //   hidden: true
-    // },
     {
       path: '/graduateInfo',
       name: '毕业生信息',
