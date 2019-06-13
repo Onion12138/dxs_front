@@ -129,20 +129,17 @@
   export default {
     mounted: function(){
       let _this = this;
-      // window.bus.$on('interviewReload', function () {
-      //   _this.loadInterview();
-      // });
       _this.loadProfile();
       _this.loadMoreData();
     },
     name: "Profile",
     data: function () {
       return {
-        email: sessionStorage.getItem("email"),
-        nickname: sessionStorage.getItem("nickname"),
-        universityName: sessionStorage.getItem("universityName"),
-        majorName: sessionStorage.getItem("majorName"),
-        role: sessionStorage.getItem("role"),
+        email: '',
+        nickname: '未知',
+        universityName: '未知',
+        majorName: '未知',
+        role: '未知',
         followedNum: 2,
         followingNum: 3,
         feeling: "心情简单",
@@ -159,7 +156,8 @@
     },
     methods:{
       jumpToProfile: function(email){
-        this.$router.push({path: "/profile",query:{email: email}});
+        this.$router.push({path: "/otherProfile",query:{email: email}});
+        window.bus.$emit('profileReload');
       },
       cancelFollow: function(followedEmail){
         let _this = this;
@@ -176,17 +174,14 @@
       },
       loadMoreData: function(){
         let _this = this;
-        // _this.$alert("那是真的牛皮!"+ _this.activeTab);
+
           getRequest("/discussion/mine",{
             page: 1,
             size: 100,//只展示最近一百条
             email: _this.email,
           }).then(resp=>{
             if (resp.data.code === 0){
-              // _this.postArticles = {};
               _this.postArticles = resp.data.data.content;
-            }else{
-              _this.$alert("数据错误");
             }
           });
           getRequest("/follow/getInfo",{
@@ -195,35 +190,30 @@
             size: _this.pageSize
           }).then(resp=>{
               if(resp.data.code === 0){
-                _this.followingNum = resp.data.data.followingNum;
-                _this.followedNum = resp.data.data.followedNum;
+                _this.followingNum = resp.data.data.followingCnt;
+                _this.followedNum = resp.data.data.followedCnt;
                 _this.followingList = resp.data.data.following.list;
                 _this.followedList = resp.data.data.followed.list;
               }else{
-                _this.$alert("数据错误");
+                // _this.$alert("数据错误");
               }
             })
       },
       loadProfile: function () {
         let _this = this;
-
+        _this.email = sessionStorage.getItem("email");
         getRequest("/user",{
           email: _this.email,
-          role: _this.role,
-        })
-          .then(resp=>{
+        }).then(resp=>{
             if(resp.data.code === 0){
-              _this.followingNum = resp.data.data.followingNum;
-              _this.followedNum = resp.data.data.followedNum;
+              _this.majorName = resp.data.data.majorName;
+              _this.universityName = resp.data.data.universityName;
+              _this.role = resp.data.data.role;
+              _this.nickname = resp.data.data.nickname;
             }else{
               _this.$alert("数据错误");
             }
           });
-        if (_this.universityName === null){
-          _this.universityName = '未知';
-          _this.majorName = '未知';
-          _this.role = '未认证用户';
-        }
       }
     }
   }

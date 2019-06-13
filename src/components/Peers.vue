@@ -13,8 +13,8 @@
     </div>
     <div style="display: flex;justify-content: space-around;flex-wrap: wrap">
       <el-card style="width:330px;margin-top: 10px;" v-for="(user,index) in users" :key="index"
-               v-loading="loading" @click.native="goToProfile(user.email)" >
-        <div slot="header" style="text-align: left">
+               v-loading="loading" >
+        <div slot="header" style="text-align: left" @click="goToProfile(user.email)">
           <span>{{user.nickname}}</span>
           <!--<el-button style="float: right; padding: 3px 0;color: #ff0509" type="text" icon="el-icon-delete"
                      @click="deleteUser(user.id)">删除
@@ -94,7 +94,7 @@
         });
       },
       goToProfile(email){
-        this.$router.push({path: '/profile', query: {email: email}});
+        this.$router.push({path: '/otherProfile', query: {email: email}});
       },
       unfollowUser(email) {
         let _this = this;
