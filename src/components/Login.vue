@@ -116,7 +116,7 @@
                 sessionStorage.setItem("email",resp.data.data.email);
                 sessionStorage.setItem("universityName",resp.data.data.universityName);
                 sessionStorage.setItem("majorName",resp.data.data.majorName);
-                // sessionStorage.setItem("majorName",resp.data.data.role);
+                sessionStorage.setItem("role",resp.data.data.role);
                 if(resp.data.code === 0){
                   if (resp.data.data.role === 'undefined'){
                     // _this.$alert("请先完成认证");
