@@ -141,6 +141,8 @@
                 if(resp.data.code === 0){
                   this.$alert("认证成功");
                   sessionStorage.setItem("role","student");
+                  sessionStorage.setItem("majorName",resp.data.data.majorName);
+                  sessionStorage.setItem("universityName",resp.data.data.universityName);
                   this.$router.replace({path: "/home"});
                 }else{
                   this.$alert("认证失败");

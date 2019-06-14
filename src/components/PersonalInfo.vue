@@ -18,6 +18,9 @@
     <el-form-item label="毕业年份" v-if="role==='graduate'">
       <el-input v-model="graduateYear" :disabled="true" ></el-input>
     </el-form-item>
+    <el-form-item label="我的状态" v-if="role==='graduate'">
+      <el-input v-model="state" :disabled="true" ></el-input>
+    </el-form-item>
     <el-form-item label="我的公司" v-if="role==='graduate'">
       <el-input v-model="company" :disabled="true" ></el-input>
     </el-form-item>
@@ -26,10 +29,13 @@
     </el-form-item>
 
     <el-form-item>
-    <el-link icon="el-icon-s-custom" href="/#/homeInfo" v-if="role !=='undefined'">重新认证为在校生</el-link>
+    <el-link icon="el-icon-s-custom" href="/#/homeInfo" v-if="role ==='student'">重新认证在校生</el-link>
     </el-form-item>
     <el-form-item>
-      <el-link icon="el-icon-s-custom" href="/#/homeGraduateInfo" v-if="role !=='undefined'">重新认证为毕业生</el-link>
+      <el-link icon="el-icon-s-custom" href="/#/homeGraduateInfo" v-if="role ==='student'">认证为毕业生</el-link>
+    </el-form-item>
+    <el-form-item>
+      <el-link icon="el-icon-s-custom" href="/#/homeGraduateInfo" v-if="role === 'graduate'">重新认证</el-link>
     </el-form-item>
     <el-form-item>
     <el-link icon="el-icon-s-check" href="/#/homeReset">重置密码</el-link>
@@ -55,6 +61,7 @@
             _this.company = resp.data.data.company;
             _this.graduateYear = resp.data.data.graduateYear;
             _this.position = resp.data.data.position;
+            _this.state = resp.data.data.state;
           }
         }else{
           _this.$alert("数据查询失败");
@@ -69,6 +76,7 @@
         form: {},
         university: "",
         major: "",
+        state: "",
         company: "",
         graduateYear: 2019,
         position: "",

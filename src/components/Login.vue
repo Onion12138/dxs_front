@@ -97,7 +97,7 @@
         if(status === '0'){
           _this.$router.replace({path: '/info'});
           _this.dialogFormVisible = false;
-        }else if(status === 1){
+        }else if(status === '1'){
           _this.$router.replace({path: '/graduateInfo'});
         }
       },
@@ -110,14 +110,14 @@
               email: this.loginForm.email,
               password: this.loginForm.password
             }).then(resp=> {
-                _this.loading = false;
-                sessionStorage.setItem("nickname", resp.data.data.nickname);
-                sessionStorage.setItem("token",resp.data.data.token);
-                sessionStorage.setItem("email",resp.data.data.email);
-                sessionStorage.setItem("universityName",resp.data.data.universityName);
-                sessionStorage.setItem("majorName",resp.data.data.majorName);
-                sessionStorage.setItem("role",resp.data.data.role);
                 if(resp.data.code === 0){
+                  sessionStorage.setItem("nickname", resp.data.data.nickname);
+                  sessionStorage.setItem("token",resp.data.data.token);
+                  sessionStorage.setItem("email",resp.data.data.email);
+                  sessionStorage.setItem("universityName",resp.data.data.universityName);
+                  sessionStorage.setItem("majorName",resp.data.data.majorName);
+                  sessionStorage.setItem("role",resp.data.data.role);
+                  _this.loading = false;
                   if (resp.data.data.role === 'undefined'){
                     // _this.$alert("请先完成认证");
                     _this.dialogFormVisible = true;
@@ -127,7 +127,8 @@
                     _this.$router.replace({path: '/home'});
                   }
                 }else{
-                  _this.$alert(resp.data.msg);
+                  _this.loading = false;
+                  _this.$message({type: 'error', message: resp.data.msg});
                 }
               },
               resp=> {

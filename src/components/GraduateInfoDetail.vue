@@ -1,7 +1,8 @@
 <template>
   <el-form :model="registerForm" :rules="rules" ref="registerForm" class="login-container" label-position="left"
-           label-width="20px" >
+           label-width="20px" v-loading="loading">
     <h3 class="login_title">毕业生信息认证</h3>
+
     <el-row >
       <el-select v-model="listQuery.provinceId" placeholder="省份" class="filter-item"
                  @change="queryCity" >
@@ -34,16 +35,25 @@
     </el-row>
 
     <el-row>
-      <el-input type="text" v-model="listQuery.companyName" placeholder="公司名称" style="width: 200px"></el-input>
+      <el-select v-model="listQuery.state" placeholder="当前状态" class="filter-item" @change= "moreSelect(listQuery.state)">
+        <el-option label="工作中" value=1 ></el-option>
+        <el-option label="读研中" value=2 ></el-option>
+        <el-option label="已出国" value=3 ></el-option>
+        <el-option label="暂咸鱼" value=4 ></el-option>
+      </el-select>
     </el-row>
 
-    <el-row>
+    <el-row v-if="dialogFormVisible">
+      <el-input type="text"  v-model="listQuery.companyName" placeholder="公司名称" style="width: 200px"></el-input>
+    </el-row>
+
+    <el-row v-if="dialogFormVisible">
       <el-select v-model="listQuery.level" placeholder="薪资">
         <el-option v-for="item in salaryLevel" :key="item.id" :label="item.range" :value="item.id"></el-option>
       </el-select>
     </el-row>
 
-    <el-row>
+    <el-row v-if="dialogFormVisible">
       <el-input type="text" v-model="listQuery.position" placeholder="职位" style="width: 200px"></el-input>
     </el-row>
 
@@ -128,10 +138,22 @@
           level: "",
           position: "",
           graduateYear: "",
+          state: '',
         },
+
+        dialogFormVisible: false,
+        loading: false,
       }
     },
     methods: {
+      moreSelect(state){
+        if (state === '1'){
+          this.dialogFormVisible = true;
+        }
+        else{
+          this.dialogFormVisible = false;
+        }
+      },
       queryCity(){
         getRequest("/city",{provinceId: this.listQuery.provinceId})
           .then(resp=> {
@@ -160,6 +182,7 @@
             });
       },
       submit(){
+        this.loading = true;
         postRequest("/user/becomeGraduate",
           {universityName: this.listQuery.universityName,
             majorName: this.listQuery.majorName,
@@ -167,15 +190,19 @@
             salary: this.listQuery.level,
             position: this.listQuery.position,
             graduateYear: this.listQuery.graduateYear,
+            state: this.listQuery.state,
           },
           {token: sessionStorage.getItem("token")})
           .then(resp=>{
+            this.loading = false;
             if(resp.data.code === 0){
-              this.$alert("认证成功");
+              this.$message({message: '认证成功', type: 'success'});
               sessionStorage.setItem("role","graduate");
-              _this.$router.replace({path: "/home"});
+              sessionStorage.setItem("majorName",resp.data.data.majorName);
+              sessionStorage.setItem("universityName",resp.data.data.universityName);
+              this.$router.replace({path: "/begin"});
             }else{
-              this.$alert("认证失败");
+              this.$message({message: '认证失败', type: 'error'});
             }
           },resp=>{
             this.$alert('服务器繁忙');

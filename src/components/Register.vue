@@ -163,9 +163,9 @@
               email: this.registerForm.email
             }).then(resp => {
               if (resp.data.code === 0) {
-                _this.$alert('验证码已发送');
+                _this.$message({message: '验证码已经发送', type: 'success'});
               } else {
-                _this.$alert('验证码发送失败');
+                _this.$message({message: '验证码发送失败', type: 'error'});
               }
             },resp=> {
               _this.$alert('服务器繁忙');
