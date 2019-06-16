@@ -76,12 +76,11 @@
         "token": sessionStorage.getItem("token"),
       }).then(res => {
         if (res.data.code === 0) {
-          let _this = this.chartData.rows;
           let i = 0;
           let _data = res.data.data.cityWithCount;
-          _this = [];
+          this.chartData.rows = [];
           for (let temp in _data) {
-            _this.push({"city":temp+"","sum": _data[temp] });
+            this.chartData.rows.push({"city":temp+"","sum": _data[temp] });
             i = i + 1;
           }
         } else {

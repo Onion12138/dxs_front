@@ -70,12 +70,11 @@
         "token": sessionStorage.getItem("token"),
       }).then(res => {
         if (res.data.code === 0) {
-          let _this = this.chartData.rows;
           let i = 0;
           let _data = res.data.data.nameWithCount;
-          _this = [];
+          this.chartData.rows = [];
           for (var temp in _data) {
-            _this.push({"company":temp+"","sum": _data[temp] });
+            this.chartData.rows.push({"company":temp+"","sum": _data[temp] });
             i = i + 1;
           }
         } else {
