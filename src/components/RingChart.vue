@@ -76,13 +76,16 @@
         "token": sessionStorage.getItem("token"),
       }).then(res => {
         if (res.data.code === 0) {
+          let _this = this.chartData.rows;
           let i = 0;
           let _data = res.data.data.cityWithCount;
           this.chartData.rows = [];
           for (let temp in _data) {
-            this.chartData.rows.push({"city":temp+"","sum": _data[temp] });
+
+            _this.push({"city":temp+"","sum": _data[temp]});
             i = i + 1;
           }
+          this.$alert(this.chartData.rows);
         } else {
           this.$alert("加载失败");
         }
