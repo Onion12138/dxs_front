@@ -79,8 +79,8 @@
           let _this = this.chartData.rows;
           let i = 0;
           let _data = res.data.data.cityWithCount;
+          _this = [];
           for (let temp in _data) {
-            _this = [];
             _this.push({"city":temp+"","sum": _data[temp] });
             i = i + 1;
           }

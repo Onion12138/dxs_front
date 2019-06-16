@@ -42,7 +42,7 @@
     <el-table-column
       fixed
       prop="description"
-      label="描述"
+      label="操作"
       width="600">
       <template slot-scope="scope">
       <el-button type="primary" @click="seeDetail(scope.row.companyName)">查看详情</el-button>

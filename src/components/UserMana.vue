@@ -191,7 +191,7 @@
         loading: false,
         users: [],
         pageNum: 1,
-        pageSize: 6,
+        pageSize: 18,
         pages: -1,
         total: 0,
         // allRoles: [],

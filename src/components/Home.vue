@@ -1,4 +1,5 @@
 <template>
+<!--  <div class="pull-height animated">-->
   <el-container class="home_container" >
     <el-header style="background-color: black">
       <div class="home_title">大学仕</div>
@@ -23,7 +24,7 @@
       <el-aside width="200px">
         <el-menu
           default-active="0"
-          class="el-menu-vertical-demo" style="background-color: #ECECEC" router>
+          class="el-menu-horizontal-demo"  router>
           <template v-for="(item,index) in this.$router.options.routes" v-if="!item.hidden">
 <!--            <el-submenu :index="index+''" v-if="item.children.length>1" :key="index">-->
             <el-submenu :index="index+''" v-if="item.children.length>1" :key="index">
@@ -59,7 +60,7 @@
     </el-container>
     <div>dxs@2019</div>
   </el-container>
-
+<!--  </div>-->
 </template>
 <script>
   import {getRequest} from '../utils/api'
@@ -185,4 +186,8 @@
     margin-right: 20px;
     /*background-color: #fff;*/
   }
+
+  /*.pull-height animated{*/
+  /*  background-image: url("../assets/background.png");*/
+  /*}*/
 </style>

@@ -73,8 +73,8 @@
           let _this = this.chartData.rows;
           let i = 0;
           let _data = res.data.data.nameWithCount;
+          _this = [];
           for (var temp in _data) {
-            _this = [];
             _this.push({"company":temp+"","sum": _data[temp] });
             i = i + 1;
           }

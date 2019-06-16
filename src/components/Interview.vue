@@ -99,6 +99,8 @@
               if(resp.data.code === 0){
                 _this.$alert("添加成功");
                 window.bus.$emit('interviewReload');
+                _this.add = true;
+                _this.feeling = "";
               }else{
                 _this.$alert("添加失败");
               }
