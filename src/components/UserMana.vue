@@ -37,8 +37,11 @@
           <div style="text-align: left;color:#20a0ff;font-size: 15px;margin-top: 8px">
             <span>专业名字:&#8194;</span><span>{{user.majorName}}</span>
           </div>
-<!--          <div style="text-align: left;color:#20a0ff;font-size: 15px;margin-top: 8px" v-if="user.role">-->
+<!--          <div style="text-align: left;color:#20a0ff;font-size: 15px;margin-top: 8px" v-if="user.role === '在校生'">-->
 <!--            <span>年级:&#8194;</span><span>{{user.gradeOrYear}}</span>-->
+<!--          </div>-->
+<!--          <div style="text-align: left;color:#20a0ff;font-size: 15px;margin-top: 8px" v-if="user.role === '毕业老狗'">-->
+<!--            <span>毕业年份:&#8194;</span><span>{{user.gradeOrYear}}</span>-->
 <!--          </div>-->
           <div
             style="text-align: left;color:#20a0ff;margin-top: 8px;display: flex;align-items: center">

@@ -53,14 +53,11 @@
       }).then(res => {
         if (res.data.code === 0) {
           let _this = this.chartData.rows;
-          let i = 0;
           let _data = res.data.data.cityWithCount;
           for (let temp in _data) {
-
             _this.push({"city":temp+"","sum": _data[temp] });
             // _this[i].city = temp;
             // _this[i].sum = _data[temp];
-            i = i + 1;
           }
         } else {
           this.$alert("加载失败");
@@ -76,16 +73,11 @@
         "token": sessionStorage.getItem("token"),
       }).then(res => {
         if (res.data.code === 0) {
-          let _this = this.chartData.rows;
-          let i = 0;
           let _data = res.data.data.cityWithCount;
           this.chartData.rows = [];
           for (let temp in _data) {
-
-            _this.push({"city":temp+"","sum": _data[temp]});
-            i = i + 1;
+            this.chartData.rows.push({"city":temp+"","sum": _data[temp]});
           }
-          this.$alert(this.chartData.rows);
         } else {
           this.$alert("加载失败");
         }

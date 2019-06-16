@@ -16,7 +16,7 @@
       <el-input v-model="major" :disabled="true" ></el-input>
     </el-form-item>
     <el-form-item label="毕业年份" v-if="role==='graduate'">
-      <el-input v-model="graduateYear" :disabled="true" ></el-input>
+      <el-input v-model="gradeOrYear" :disabled="true" ></el-input>
     </el-form-item>
     <el-form-item label="我的状态" v-if="role==='graduate'">
       <el-input v-model="state" :disabled="true" ></el-input>
@@ -59,7 +59,7 @@
           _this.major = resp.data.data.majorName;
           if(_this.role === 'graduate'){
             _this.company = resp.data.data.company;
-            _this.graduateYear = resp.data.data.graduateYear;
+            _this.gradeOrYear = resp.data.data.gradeOrYear;
             _this.position = resp.data.data.position;
             _this.state = resp.data.data.state;
           }
@@ -78,7 +78,7 @@
         major: "",
         state: "",
         company: "",
-        graduateYear: 2019,
+        gradeOrYear: 2019,
         position: "",
       }
     },

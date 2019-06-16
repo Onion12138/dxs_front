@@ -34,6 +34,8 @@
                   <div align="left"><span><strong>Status</strong></span></div>
                   <div class="user-bio-section-body" align="left" >
                     <span>身份:{{role}}</span><br>
+                    <span v-if="role==='在校生'">年级: {{gradeOrYear}}}</span>
+                    <span v-if="role==='毕业老狗'">毕业年份: {{gradeOrYear}}</span><br>
                     <span>followed: {{followedNum}}</span><br>
                     <span>following: {{followingNum}}</span><br>
                   </div>
@@ -143,6 +145,7 @@
         universityName: '未知',
         majorName: '未知',
         role: '未知',
+        gradeOrYear: '未知',
         followedNum: 2,
         followingNum: 3,
         feeling: "心情简单",
@@ -215,6 +218,7 @@
               _this.universityName = resp.data.data.universityName;
               _this.role = resp.data.data.role;
               _this.nickname = resp.data.data.nickname;
+              _this.gradeOrYear = resp.data.data.gradeOrYear;
             }else{
               _this.$alert("数据错误");
             }

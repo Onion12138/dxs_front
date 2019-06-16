@@ -50,11 +50,9 @@
       }).then(res => {
         if (res.data.code === 0) {
           let _this = this.chartData.rows;
-          let i = 0;
           let _data = res.data.data.nameWithCount;
           for (var temp in _data) {
             _this.push({"company":temp+"","sum": _data[temp] });
-            i = i + 1;
           }
         } else {
           this.$alert("加载失败");
@@ -70,12 +68,10 @@
         "token": sessionStorage.getItem("token"),
       }).then(res => {
         if (res.data.code === 0) {
-          let i = 0;
           let _data = res.data.data.nameWithCount;
           this.chartData.rows = [];
-          for (var temp in _data) {
+          for (let temp in _data) {
             this.chartData.rows.push({"company":temp+"","sum": _data[temp] });
-            i = i + 1;
           }
         } else {
           this.$alert("加载失败");
