@@ -25,37 +25,7 @@
       return {
         chartData: {
           columns: ['city', 'sum'],
-          rows:[{
-            'city':'','sum':''
-          },{
-            'city':'','sum':''
-          },{
-            'city':'','sum':''
-          },{
-            'city':'','sum':''
-          },{
-            'city':'','sum':''
-          },{
-            'city':'','sum':''
-          },{
-            'city':'','sum':''
-          },{
-            'city':'','sum':''
-          },{
-            'city':'','sum':''
-          },{
-            'city':'','sum':''
-          },{
-            'city':'','sum':''
-          },{
-            'city':'','sum':''
-          },{
-            'city':'','sum':''
-          },{
-            'city':'','sum':''
-          },{
-            'city':'','sum':''
-          }]
+          rows:[]
         },
         options: [{
           value: '2019'
@@ -86,8 +56,10 @@
           let i = 0;
           let _data = res.data.data.cityWithCount;
           for (let temp in _data) {
-            _this[i].city = temp;
-            _this[i].sum = _data[temp];
+
+            _this.push({"city":temp+"","sum": _data[temp] });
+            // _this[i].city = temp;
+            // _this[i].sum = _data[temp];
             i = i + 1;
           }
         } else {
@@ -108,8 +80,8 @@
           let i = 0;
           let _data = res.data.data.cityWithCount;
           for (let temp in _data) {
-            _this[i].city = temp;
-            _this[i].sum = _data[temp];
+            _this = [];
+            _this.push({"city":temp+"","sum": _data[temp] });
             i = i + 1;
           }
         } else {

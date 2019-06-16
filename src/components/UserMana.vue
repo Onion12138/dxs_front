@@ -37,6 +37,9 @@
           <div style="text-align: left;color:#20a0ff;font-size: 15px;margin-top: 8px">
             <span>专业名字:&#8194;</span><span>{{user.majorName}}</span>
           </div>
+<!--          <div style="text-align: left;color:#20a0ff;font-size: 15px;margin-top: 8px" v-if="user.role">-->
+<!--            <span>年级:&#8194;</span><span>{{user.gradeOrYear}}</span>-->
+<!--          </div>-->
           <div
             style="text-align: left;color:#20a0ff;margin-top: 8px;display: flex;align-items: center">
             <span>关注状态:&#12288;</span>

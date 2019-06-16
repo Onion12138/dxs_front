@@ -24,20 +24,7 @@
       return {
         chartData: {
           columns: ['company', 'sum'],
-          rows: [
-            { 'company': '', 'sum': ''},
-            { 'company': '', 'sum': ''},
-            { 'company': '', 'sum': ''},
-            { 'company': '', 'sum': ''},
-            { 'company': '', 'sum': ''},
-            { 'company': '', 'sum': ''},
-            { 'company': '', 'sum': ''},
-            { 'company': '', 'sum': ''},
-            { 'company': '', 'sum': ''},
-            { 'company': '', 'sum': ''},
-            { 'company': '', 'sum': ''},
-            { 'company': '', 'sum': ''}
-          ]
+          rows: []
         },
         options: [{
           value: '2019'
@@ -66,8 +53,7 @@
           let i = 0;
           let _data = res.data.data.nameWithCount;
           for (var temp in _data) {
-            _this[i].company = temp;
-            _this[i].sum = _data[temp];
+            _this.push({"company":temp+"","sum": _data[temp] });
             i = i + 1;
           }
         } else {
@@ -88,8 +74,8 @@
           let i = 0;
           let _data = res.data.data.nameWithCount;
           for (var temp in _data) {
-            _this[i].company = temp;
-            _this[i].sum = _data[temp];
+            _this = [];
+            _this.push({"company":temp+"","sum": _data[temp] });
             i = i + 1;
           }
         } else {
