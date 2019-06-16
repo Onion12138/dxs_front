@@ -82,7 +82,7 @@
           let _this=this.chartData.rows;
           _this[0].sum = res.data.data.yan;
           _this[1].sum = res.data.data.work;
-          _this[2].sum = res.data.data.abroad;
+          _this[2].sum = res.data.data.aboard;
           _this[3].sum = res.data.data.unemployment;
         }else{
           this.$alert("加载失败");
@@ -91,7 +91,7 @@
     },
     updated() {
       //this.$alert(this.value);
-      postRequest('/student/salaryChange', {
+      postRequest('/student/choice', {
         "college": sessionStorage.getItem("universityName"),
         "major": sessionStorage.getItem("majorName"),
         "year": this.value,
@@ -99,10 +99,10 @@
       }).then(res => {
         if (res.data.code === 0) {
           let _this=this.chartData.rows;
-          for(let i = 0;i < res.data.data.salary.length;i = i+1) {
-            _this[i].year = res.data.data.year[i]+"";
-            _this[i].salary = res.data.data.salary[i]+"";
-          }
+          _this[0].sum = res.data.data.yan;
+          _this[1].sum = res.data.data.work;
+          _this[2].sum = res.data.data.aboard;
+          _this[3].sum = res.data.data.unemployment;
         }else{
           this.$alert("加载失败");
         }

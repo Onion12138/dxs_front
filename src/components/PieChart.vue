@@ -32,6 +32,10 @@
             { 'company': '', 'sum': ''},
             { 'company': '', 'sum': ''},
             { 'company': '', 'sum': ''},
+            { 'company': '', 'sum': ''},
+            { 'company': '', 'sum': ''},
+            { 'company': '', 'sum': ''},
+            { 'company': '', 'sum': ''},
             { 'company': '', 'sum': ''}
           ]
         },
@@ -83,19 +87,22 @@
     },
     updated() {
       //this.$alert(this.value);
-      postRequest('/student/salaryChange', {
+      postRequest('/student/desCompany', {
         "college": sessionStorage.getItem("universityName"),
         "major": sessionStorage.getItem("majorName"),
         "year": this.value,
         "token": sessionStorage.getItem("token"),
       }).then(res => {
         if (res.data.code === 0) {
-          let _this=this.chartData.rows;
-          for(let i = 0;i < res.data.data.salary.length;i = i+1) {
-            _this[i].year = res.data.data.year[i]+"";
-            _this[i].salary = res.data.data.salary[i]+"";
+          let _this = this.chartData.rows;
+          let i = 0;
+          let _data = res.data.data.nameWithCount;
+          for (var temp in _data) {
+            _this[i].company = temp;
+            _this[i].sum = _data[temp];
+            i = i + 1;
           }
-        }else{
+        } else {
           this.$alert("加载失败");
         }
       })
