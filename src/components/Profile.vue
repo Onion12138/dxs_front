@@ -34,7 +34,7 @@
                   <div align="left"><span><strong>Status</strong></span></div>
                   <div class="user-bio-section-body" align="left" >
                     <span>身份:{{role}}</span><br>
-                    <span v-if="role==='在校生'">年级: {{gradeOrYear}}}</span>
+                    <span v-if="role==='在校生'">年级: {{gradeOrYear}}</span>
                     <span v-if="role==='毕业老狗'">毕业年份: {{gradeOrYear}}</span><br>
                     <span>followed: {{followedNum}}</span><br>
                     <span>following: {{followingNum}}</span><br>
